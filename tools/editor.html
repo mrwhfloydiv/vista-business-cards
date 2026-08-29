@@ -86,8 +86,37 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
 .cta{display:inline-flex;align-items:center;gap:10px;background:var(--vista-black);color:white;padding:13px 26px;
   border-radius:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;
-  transition:all var(--t);box-shadow:var(--shadow-md)}
-.cta:hover{background:var(--vista-red);transform:translateY(-2px)}
+  transition:all var(--t);box-shadow:var(--shadow-md);position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;inset:0;background:var(--vista-red);transform:translateX(-101%);
+  transition:transform 420ms cubic-bezier(.65,0,.35,1);z-index:0}
+.cta::after{content:'';position:absolute;top:0;bottom:0;left:-40%;width:30%;
+  background:linear-gradient(110deg,transparent 0%,rgba(255,255,255,.18) 50%,transparent 100%);
+  transform:skewX(-18deg);animation:shine 3.4s ease-in-out infinite;z-index:1;pointer-events:none}
+@keyframes shine{0%{left:-40%}60%{left:130%}100%{left:130%}}
+.cta:hover{transform:translateY(-2px)}
+.cta:hover::before{transform:translateX(0)}
+.cta > *{position:relative;z-index:2}
+
+/* Animated brand-color border + glow — the Save to Contacts treatment,
+   for the buttons that matter. */
+.glow-wrap{position:relative;border-radius:15px;padding:3px;
+  background:linear-gradient(90deg,var(--vista-red),#ebaa1f,#b5d9ee,#ebaa1f,var(--vista-red));
+  background-size:300% 100%;
+  animation:borderFlow 5s linear infinite,borderGlow 5s linear infinite}
+.glow-wrap .cta{width:100%;justify-content:center;margin:0;display:flex}
+.glow-wrap.round{border-radius:999px}
+.glow-wrap.round .pill{width:100%;justify-content:center;border:none;padding:11px 15px}
+.glow-wrap.danger{background:linear-gradient(90deg,#8e2123,#b22c2e,#e8807f,#b22c2e,#8e2123);background-size:300% 100%;
+  animation:borderFlow 4s linear infinite,dangerGlow 2.4s ease-in-out infinite}
+.glow-wrap.danger .pill{width:100%;justify-content:center;border:none;color:var(--vista-red);font-weight:600}
+.glow-wrap.danger .pill:hover{color:white}
+@keyframes borderFlow{to{background-position:-300% 0}}
+@keyframes borderGlow{
+  0%,100%{box-shadow:0 5px 20px rgba(178,44,46,.30)}
+  33%{box-shadow:0 5px 20px rgba(235,170,31,.32)}
+  66%{box-shadow:0 5px 20px rgba(181,217,238,.5)}}
+@keyframes dangerGlow{0%,100%{box-shadow:0 4px 16px rgba(178,44,46,.22)}50%{box-shadow:0 4px 22px rgba(178,44,46,.42)}}
+@media (prefers-reduced-motion:reduce){.glow-wrap,.glow-wrap.danger,.cta::after{animation:none}}
 .pill{display:inline-flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;
   background:white;border:1.5px solid var(--line);border-radius:999px;padding:9px 15px;transition:all var(--t)}
 .pill:hover{background:var(--vista-red);color:white;border-color:var(--vista-red)}
@@ -189,9 +218,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       </div>
       <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" hidden>
     </div>
-    <div class="btnrow">
-      <button class="cta" id="saveBtn">SAVE &amp; REBUILD →</button>
-      <button class="pill danger" id="deleteBtn">DELETE PERSON</button>
+    <div class="btnrow" style="flex-direction:column;align-items:stretch">
+      <div class="glow-wrap"><button class="cta" id="saveBtn">SAVE &amp; REBUILD →</button></div>
+      <div class="glow-wrap danger round"><button class="pill danger" id="deleteBtn">DELETE PERSON</button></div>
     </div>
   </section>
 
@@ -200,7 +229,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       <h3>Live <em>preview.</em></h3>
       <div class="preview-hint">Updates on every save · click the phone to open the real page</div>
       <a class="phone" id="phoneLink" href="#" target="_blank"><span class="phone-notch"></span><iframe id="previewFrame" title="Card preview" tabindex="-1"></iframe></a>
-      <a class="pill open-btn" id="openLink" href="#" target="_blank">OPEN FULL CARD ↗</a>
+      <div class="glow-wrap round" style="margin-top:16px"><a class="pill open-btn" id="openLink" href="#" target="_blank" style="margin-top:0">OPEN FULL CARD ↗</a></div>
     </div>
 
     <div class="panel">
@@ -235,7 +264,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
         <div class="field wide" style="grid-column:1 / -1"><button class="pill" id="logoUpload" style="justify-content:center">⬆ UPLOAD CUSTOM LOGO (PNG)</button></div>
       </div>
       <div class="btnrow" style="flex-direction:column;align-items:stretch">
-        <button class="cta" id="qrApply" style="justify-content:center">USE ON THIS CARD →</button>
+        <div class="glow-wrap"><button class="cta" id="qrApply">USE ON THIS CARD →</button></div>
         <div style="display:flex;gap:10px">
           <button class="pill" id="qrApplyAll" style="flex:1;justify-content:center">APPLY TO ALL</button>
           <button class="pill danger" id="qrReset" style="flex:1;justify-content:center">RESET TO PLAIN</button>
@@ -249,7 +278,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       <div class="field"><label>GoatCounter code · free at goatcounter.com</label><input id="s_goat" placeholder="e.g. vistacards"></div>
       <div class="field" style="margin-top:10px"><label>Command Station endpoint · optional, later</label><input id="s_endpoint" placeholder="https://…/api/card-scan"></div>
       <div class="btnrow" style="flex-direction:column;align-items:stretch">
-        <button class="cta" id="settingsSave" style="justify-content:center">SAVE SETTINGS →</button>
+        <div class="glow-wrap"><button class="cta" id="settingsSave">SAVE SETTINGS →</button></div>
       </div>
       <div class="hint">Once a GoatCounter code is set, every card counts scans (page views) AND taps — save contact, call, text, email, website, LinkedIn — per person, with device, browser, and country. Free, anonymous, no cookie banner needed. Stats live at <span id="goatLink">&lt;code&gt;.goatcounter.com</span> and are API-queryable for the Command Station.</div>
     </div>
