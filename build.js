@@ -26,7 +26,7 @@ const OUT = path.join(ROOT, 'docs');
 const PHOTO_DIR = path.join(ROOT, 'assets', 'photos');
 const CARDART_DIR = path.join(ROOT, 'assets', 'cardart');
 const IMG_EXTS = ['.jpg', '.jpeg', '.png'];
-const SHARED_ASSETS = ['vista-v.png', 'vista-v-white.png', 'vista-logo-full.png', 'grid-bg.js'];
+const SHARED_ASSETS = ['vista-v.png', 'vista-v-white.png', 'vista-logo-full.png', 'vista-wordmark.svg', 'grid-bg.js'];
 
 const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.json'), 'utf8'));
 const template = fs.readFileSync(path.join(ROOT, 'templates', 'card.html'), 'utf8');

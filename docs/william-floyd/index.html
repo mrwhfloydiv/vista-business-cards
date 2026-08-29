@@ -81,9 +81,9 @@ body {
 /* ============ HEADER ============ */
 .site-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 16px 22px;
+  padding: 18px 22px;
   border-bottom: 1px solid var(--line);
   background: rgba(250, 250, 250, 0.7);
   backdrop-filter: blur(10px);
@@ -92,60 +92,18 @@ body {
   top: 0;
   z-index: 10;
 }
-.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
-.brand-mark { width: 34px; height: 34px; object-fit: contain; transition: transform var(--t); }
-.brand:hover .brand-mark { transform: translateY(-2px) rotate(-3deg); }
-.brand-text { display: flex; flex-direction: column; }
-.brand-name {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  font-size: 16px;
-  line-height: 1;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  white-space: nowrap;
+.brand { display: block; text-decoration: none; line-height: 0; }
+.brand-wordmark {
+  height: 24px;
+  max-width: min(86vw, 420px);
+  object-fit: contain;
+  transition: transform var(--t);
 }
-em.brand-name-light {
-  font-family: 'Instrument Serif', 'Times New Roman', serif;
-  font-style: italic;
-  font-weight: 700;
-  color: var(--vista-red);
-  font-size: 1.22em;
-  letter-spacing: -0.005em;
-}
-.brand-tag {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.18em;
-  color: var(--ink-soft);
-  margin-top: 4px;
-}
-.meta-pill {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: var(--vista-black);
-  color: var(--vista-white);
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-}
-.meta-dot {
-  width: 7px; height: 7px; border-radius: 50%;
-  background: #4ade80;
-  box-shadow: 0 0 8px #4ade80;
-  animation: pulse 1.8s ease-in-out infinite;
-}
+.brand:hover .brand-wordmark { transform: translateY(-1px); }
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.5; transform: scale(0.85); }
 }
-@media (max-width: 480px) { .meta-pill { display: none; } }
 
 /* ============ MAIN ============ */
 main {
@@ -393,16 +351,6 @@ main {
 .cta-label, .cta-arrow { position: relative; z-index: 2; }
 .cta-arrow { font-size: 20px; transition: transform var(--t); }
 .cta-button:hover .cta-arrow { transform: translateX(6px); }
-.cta-hint {
-  margin-top: 12px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-}
-
 /* ============ PANELS ============ */
 .panel {
   background: var(--paper-card);
@@ -507,21 +455,23 @@ a.row:hover .value { color: var(--vista-red-dark); text-decoration: underline; t
 /* ============ FOOTER ============ */
 .site-footer {
   text-align: center;
-  padding: 26px 16px 34px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  opacity: 0.75;
+  padding: 30px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.footer-wordmark {
+  height: 22px;
+  max-width: min(84vw, 380px);
+  object-fit: contain;
 }
 .site-footer em {
   font-family: 'Instrument Serif', 'Times New Roman', serif;
   font-style: italic;
   color: var(--vista-red);
-  font-size: 1.3em;
-  letter-spacing: 0.02em;
-  text-transform: none;
+  font-size: 21px;
+  letter-spacing: 0.01em;
 }
 </style>
 </head>
@@ -529,13 +479,8 @@ a.row:hover .value { color: var(--vista-red-dark); text-decoration: underline; t
 
 <header class="site-header">
   <a class="brand" href="../">
-    <img src="../assets/vista-v.png" alt="" class="brand-mark">
-    <div class="brand-text">
-      <div class="brand-name">VISTA <em class="brand-name-light">Site Selection</em></div>
-      <div class="brand-tag">DIGITAL BUSINESS CARD</div>
-    </div>
+    <img src="../assets/vista-wordmark.svg" alt="Vista Site Selection" class="brand-wordmark">
   </a>
-  <span class="meta-pill"><span class="meta-dot"></span>SCAN · SAVE · DONE</span>
 </header>
 
 <canvas id="bgGrid" class="bg-grid" aria-hidden="true"></canvas>
@@ -566,7 +511,6 @@ a.row:hover .value { color: var(--vista-red-dark); text-decoration: underline; t
           <span class="cta-arrow">→</span>
         </a>
       </div>
-      <div class="cta-hint">No app required · works on iPhone &amp; Android</div>
     </div>
   </section>
 
@@ -585,7 +529,10 @@ a.row:hover .value { color: var(--vista-red-dark); text-decoration: underline; t
   </section>
 </main>
 
-<footer class="site-footer">VISTA SITE SELECTION · <em>find the perfect site</em></footer>
+<footer class="site-footer">
+  <img src="../assets/vista-wordmark.svg" alt="Vista Site Selection" class="footer-wordmark">
+  <em>find the perfect site</em>
+</footer>
 
 <script src="../assets/grid-bg.js"></script>
 <script data-goatcounter="https://vistacards.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
