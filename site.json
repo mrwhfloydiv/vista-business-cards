@@ -10,7 +10,7 @@
     "muted": "#6b7280"
   },
   "analyticsEndpoint": "",
-  "goatcounter": "",
+  "goatcounter": "vistacards",
   "qrStyle": {
     "dots": "extra-rounded",
     "corners": "square",

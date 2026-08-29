@@ -591,6 +591,36 @@ a.row:hover .value { color: var(--vista-red-dark); text-decoration: underline; t
 <footer class="site-footer">VISTA SITE SELECTION · <em>find the perfect site</em></footer>
 
 <script src="../assets/grid-bg.js"></script>
-
+<script data-goatcounter="https://vistacards.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
+<script>
+  (function () {
+    var slug = "evan-stair";
+    var endpoint = "";
+    function report(action) {
+      try {
+        if (window.goatcounter && window.goatcounter.count) {
+          window.goatcounter.count({ path: slug + '/' + action, title: slug + ' — ' + action, event: true });
+        }
+      } catch (e) {}
+      try {
+        if (endpoint) {
+          navigator.sendBeacon(endpoint, JSON.stringify({
+            card: slug, action: action, t: Date.now(),
+            ref: document.referrer, ua: navigator.userAgent, lang: navigator.language
+          }));
+        }
+      } catch (e) {}
+    }
+    if (endpoint) report('scan');
+    function hook(selector, action) {
+      document.querySelectorAll(selector).forEach(function (el) {
+        el.addEventListener('click', function () { report(typeof action === 'function' ? action(el) : action); });
+      });
+    }
+    hook('.cta-button', 'save-contact');
+    hook('.qa', function (el) { return 'tap-' + (el.querySelector('.qa-label') || {}).textContent.toLowerCase().trim(); });
+    hook('.linkrow', function (el) { return 'open-' + el.textContent.trim().toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, ''); });
+  })();
+</script>
 </body>
 </html>
