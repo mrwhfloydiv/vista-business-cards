@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista Site Selection — Card HQ</title>
+<link rel="icon" type="image/png" href="assets/vista-v.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --vista-black: #14191c;
+  --vista-white: #fafafa;
+  --vista-red: #b22c2e;
+  --vista-red-dark: #8e2123;
+  --ink: #14191c;
+  --paper: #eceef1;
+  --ink-soft: #5a6168;
+  --line: #d8dbdf;
+  --line-soft: #e3e6ea;
+  --shadow-sm: 0 1px 2px rgba(20,25,28,.04), 0 1px 3px rgba(20,25,28,.06);
+  --shadow-md: 0 4px 14px rgba(20,25,28,.08), 0 2px 6px rgba(20,25,28,.04);
+  --shadow-lg: 0 24px 60px rgba(20,25,28,.10), 0 8px 20px rgba(20,25,28,.06);
+  --radius: 14px;
+  --radius-lg: 22px;
+  --t: 220ms cubic-bezier(.22,.61,.36,1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Manrope', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(900px 500px at 88% -200px, rgba(181,217,238,.20), transparent 60%),
+    radial-gradient(700px 400px at -80px 600px, rgba(235,170,31,.08), transparent 60%),
+    var(--paper);
+  overflow-x: hidden;
+}
+.bg-grid { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 0; display: block; }
+.bg-grain {
+  position: fixed; inset: 0; pointer-events: none; z-index: 1; opacity: .18; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.10  0 0 0 0 0.11  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+.site-header, main, .site-footer { position: relative; z-index: 2; }
+.site-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 20px 40px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(250,250,250,.7);
+  backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 10;
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand-mark { width: 38px; height: 38px; object-fit: contain; transition: transform var(--t); }
+.brand:hover .brand-mark { transform: translateY(-2px) rotate(-3deg); }
+.brand-name {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  letter-spacing: .04em; font-size: 18px; line-height: 1;
+  display: inline-flex; align-items: baseline; gap: 6px;
+}
+em.brand-name-light {
+  font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 700;
+  color: var(--vista-red); font-size: 1.22em;
+}
+.brand-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .18em; color: var(--ink-soft); margin-top: 4px; }
+.meta-pill {
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .12em;
+  padding: 8px 14px; border-radius: 999px;
+  background: var(--vista-black); color: var(--vista-white);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.meta-dot { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: pulse 1.8s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(.85)} }
+@media (max-width: 560px) { .meta-pill { display: none; } .site-header { padding: 16px 20px; } }
+
+main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40px 80px; }
+@media (max-width: 640px) { main { padding: 40px 20px 64px; } }
+
+.hero { margin-bottom: 48px; max-width: 880px; }
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: .22em;
+  color: var(--ink-soft); text-transform: uppercase;
+  margin-bottom: 22px; padding: 7px 14px;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: rgba(255,255,255,.55); backdrop-filter: blur(6px);
+}
+.eye-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--vista-red); box-shadow: 0 0 10px rgba(178,44,46,.6); animation: pulse 2s ease-in-out infinite; }
+.hero-title {
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-size: clamp(40px, 6vw, 72px); line-height: 1.02; letter-spacing: -.035em;
+  margin-bottom: 24px;
+}
+.hero-title .accent-serif {
+  font-family: 'Instrument Serif', serif; font-weight: 400; font-style: italic;
+  color: var(--vista-red); font-size: 1.16em; position: relative;
+}
+.hero-title .accent-serif em { font-style: italic; position: relative; display: inline-block; }
+.hero-title .accent-serif em::after {
+  content: ''; position: absolute; left: -2%; right: -2%; bottom: -.04em; height: 8px;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 8' preserveAspectRatio='none'><path d='M2 5 C 40 1, 80 7, 120 3 S 180 6, 198 4' stroke='%23b22c2e' stroke-width='2.5' fill='none' stroke-linecap='round'/></svg>");
+  background-size: 100% 100%; background-repeat: no-repeat;
+  transform-origin: left center;
+  animation: drawLine 700ms 1000ms cubic-bezier(.65,0,.35,1) both;
+}
+@keyframes drawLine { 0%{transform:scaleX(0);opacity:0} 100%{transform:scaleX(1);opacity:1} }
+.reveal-word { display: inline-block; opacity: 0; transform: translateY(28px); animation: revealWord 720ms cubic-bezier(.22,.61,.36,1) forwards; animation-delay: var(--d, 0ms); }
+@keyframes revealWord { to { opacity: 1; transform: translateY(0); } }
+.reveal-fade { opacity: 0; animation: revealFade 600ms ease forwards; animation-delay: var(--d, 0ms); }
+@keyframes revealFade { to { opacity: 1; } }
+.hero-sub { font-size: 18px; line-height: 1.55; color: var(--ink-soft); max-width: 640px; }
+.hero-sub-emphasis {
+  display: block; margin-top: 12px; color: var(--vista-red);
+  font-family: 'Instrument Serif', serif; font-style: italic; font-size: 1.45em;
+}
+
+.team-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px, 1fr)); gap: 24px; }
+@media (max-width: 560px) { .team-grid { grid-template-columns: 1fr; } }
+
+.team-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  gap: 22px;
+  transition: all var(--t);
+  animation: cardIn 560ms cubic-bezier(.22,.61,.36,1) both;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes cardIn { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+.team-card:hover { border-color: var(--vista-black); transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+@media (max-width: 520px) { .team-card { flex-direction: column; align-items: center; text-align: center; } }
+
+/* Phone-frame live preview — the little window into the real card page */
+.phone-col { flex-shrink: 0; }
+.phone {
+  display: block;
+  position: relative;
+  width: 148px;
+  height: 300px;
+  border-radius: 22px;
+  background: var(--vista-black);
+  padding: 7px;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: transform var(--t), box-shadow var(--t);
+}
+.phone:hover { transform: translateY(-4px) rotate(-1.2deg); box-shadow: 0 20px 50px rgba(20,25,28,.25); }
+.phone-notch {
+  position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
+  width: 44px; height: 12px;
+  background: var(--vista-black);
+  border-radius: 0 0 10px 10px;
+  z-index: 3;
+}
+.phone iframe {
+  width: 375px;
+  height: 764px;
+  border: 0;
+  border-radius: 16px;
+  background: var(--paper);
+  transform: scale(0.3573);
+  transform-origin: top left;
+  pointer-events: none;
+}
+.phone-glass { position: absolute; inset: 0; z-index: 2; }
+
+.team-info { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; position: relative; }
+@media (max-width: 520px) { .team-info { align-items: center; } }
+.team-photo {
+  width: 58px; height: 58px; border-radius: 50%;
+  overflow: hidden; border: 3px solid white;
+  box-shadow: var(--shadow-md);
+  background: #fbeaea;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; color: var(--vista-red);
+  margin-bottom: 12px;
+}
+.team-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.team-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 20px; letter-spacing: -.01em; margin-bottom: 4px; }
+.team-role { font-size: 13px; color: var(--ink-soft); line-height: 1.45; margin-bottom: 16px; }
+.team-links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.pill-button {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10.5px; font-weight: 500;
+  letter-spacing: .08em;
+  color: var(--ink);
+  background: white; border: 1.5px solid var(--line); border-radius: 999px;
+  padding: 8px 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--t);
+  box-shadow: var(--shadow-sm);
+}
+.pill-button:hover { background: var(--vista-red); color: white; border-color: var(--vista-red); transform: translateY(-1px); box-shadow: 0 8px 22px rgba(178,44,46,.20); }
+.pill-button.primary { background: var(--vista-black); color: white; border-color: var(--vista-black); }
+.pill-button.primary:hover { background: var(--vista-red); border-color: var(--vista-red); }
+.pill-button .arrow { transition: transform var(--t); }
+.pill-button:hover .arrow { transform: translateX(3px); }
+.team-qr {
+  width: 64px; height: 64px;
+  border: 1px solid var(--line-soft);
+  border-radius: 10px;
+  padding: 4px;
+  background: white;
+  margin-top: auto;
+}
+
+.site-footer {
+  text-align: center; padding: 28px 16px 36px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--ink-soft); opacity: .75;
+}
+.site-footer em { font-family: 'Instrument Serif', serif; font-style: italic; color: var(--vista-red); font-size: 1.3em; text-transform: none; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <img src="assets/vista-v.png" alt="" class="brand-mark">
+    <div class="brand-text">
+      <div class="brand-name">VISTA <em class="brand-name-light">Cards</em></div>
+      <div class="brand-tag">TEAM CARD HEADQUARTERS</div>
+    </div>
+  </div>
+  <span class="meta-pill"><span class="meta-dot"></span>11 CARDS · SELF-HOSTED · NO SUBSCRIPTION</span>
+</header>
+
+<canvas id="bgGrid" class="bg-grid" aria-hidden="true"></canvas>
+<div class="bg-grain" aria-hidden="true"></div>
+
+<main>
+  <section class="hero">
+    <div class="hero-eyebrow reveal-fade" style="--d:60ms"><span class="eye-dot"></span><span>VISTA · INTERNAL TOOL · CARD HQ</span></div>
+    <h1 class="hero-title">
+      <span class="reveal-word" style="--d:0ms">Your</span>
+      <span class="reveal-word" style="--d:70ms">team.</span>
+      <span class="reveal-word accent-serif" style="--d:220ms"><em>Your&nbsp;cards.</em></span><br>
+      <span class="reveal-word" style="--d:420ms">Your</span>
+      <span class="reveal-word" style="--d:490ms">rules.</span>
+    </h1>
+    <p class="hero-sub reveal-fade" style="--d:700ms">
+      Every Vista Site Selection digital business card in one place — preview them live,
+      grab the vCard, download print-ready QR codes.
+      <span class="hero-sub-emphasis">No subscription. Nobody holding our cards hostage.</span>
+    </p>
+  </section>
+
+  <section class="team-grid">
+
+  <article class="team-card" style="--d:0ms">
+    <div class="phone-col">
+      <a class="phone" href="andrea-dishler/" title="Open Andrea Dishler's card">
+        <span class="phone-notch"></span>
+        <iframe src="andrea-dishler/" loading="lazy" tabindex="-1" title="Preview of Andrea Dishler's card"></iframe>
+        <span class="phone-glass"></span>
+      </a>
+    </div>
+    <div class="team-info">
+      <div class="team-photo"><img src="andrea-dishler/photo.jpg" alt=""></div>
+      <h3 class="team-name">Andrea Dishler</h3>
+      <p class="team-role">Senior Vice President, Project Management</p>
+      <div class="team-links">
+        <a class="pill-button primary" href="andrea-dishler/">OPEN CARD <span class="arrow">→</span></a>
+        <a class="pill-button" href="andrea-dishler/contact.vcf" download="andrea-dishler.vcf">VCARD</a>
+        <a class="pill-button" href="andrea-dishler/qr-print.png" download="andrea-dishler-qr.png">PRINT QR</a>
+      </div>
+      <img class="team-qr" src="andrea-dishler/qr.svg" alt="QR code for Andrea Dishler" loading="lazy">
+    </div>
+  </article>
+
+  <article class="team-card" style="--d:90ms">
+    <div class="phone-col">
+      <a class="phone" href="chris-magill/" title="Open Chris J. Magill's card">
+        <span class="phone-notch"></span>
+        <iframe src="chris-magill/" loading="lazy" tabindex="-1" title="Preview of Chris J. Magill's card"></iframe>
+        <span class="phone-glass"></span>
+      </a>
+    </div>
+    <div class="team-info">
+      <div class="team-photo"><img src="chris-magill/photo.jpg" alt=""></div>
+      <h3 class="team-name">Chris J. Magill</h3>
+      <p class="team-role">Partner, Managing Director</p>
+      <div class="team-links">
+        <a class="pill-button primary" href="chris-magill/">OPEN CARD <span class="arrow">→</span></a>
+        <a class="pill-button" href="chris-magill/contact.vcf" download="chris-magill.vcf">VCARD</a>
+        <a class="pill-button" href="chris-magill/qr-print.png" download="chris-magill-qr.png">PRINT QR</a>
+      </div>
+      <img class="team-qr" src="chris-magill/qr.svg" alt="QR code for Chris J. Magill" loading="lazy">
+    </div>
+  </article>
+
+  <article class="team-card" style="--d:180ms">
+    <div class="phone-col">
+      <a class="phone" href="evan-stair/" title="Open Evan L. Stair's card">
+        <span class="phone-notch"></span>
+        <iframe src="evan-stair/" loading="lazy" tabindex="-1" title="Preview of Evan L. Stair's card"></iframe>
+        <span class="phone-glass"></span>
+      </a>
+    </div>
+    <div class="team-info">
+      <div class="team-photo"><img src="evan-stair/photo.jpg" alt=""></div>
+      <h3 class="team-name">Evan L. Stair</h3>
+      <p class="team-role">Partner, Managing Director – Analytics</p>
+      <div class="team-links">
+        <a class="pill-button primary" href="evan-stair/">OPEN CARD <span class="arrow">→</span></a>
+        <a class="pill-button" href="evan-stair/contact.vcf" download="evan-stair.vcf">VCARD</a>
+        <a class="pill-button" href="evan-stair/qr-print.png" download="evan-stair-qr.png">PRINT QR</a>
+      </div>
+      <img class="team-qr" src="evan-stair/qr.svg" alt="QR code for Evan L. Stair" loading="lazy">
+    </div>
+  </article>
+
+  <article class="team-card" style="--d:270ms">
+    <div class="phone-col">
+      <a class="phone" href="geoff-troan/" title="Open Geoffrey (Jeff) J. Troan's card">
+        <span class="phone-notch"></span>
+        <iframe src="geoff-troan/" loading="lazy" tabindex="-1" title="Preview of Geoffrey (Jeff) J. Troan's card"></iframe>
+        <span class="phone-glass"></span>
+      </a>
+    </div>
+    <div class="team-info">
+      <div class="team-photo"><img src="geoff-troan/photo.jpg" alt=""></div>
+      <h3 class="team-name">Geoffrey (Jeff) J. Troan</h3>
+      <p class="team-role">Partner, Managing Director</p>
+      <div class="team-links">
+        <a class="pill-button primary" href="geoff-troan/">OPEN CARD <span class="arrow">→</span></a>
+        <a class="pill-button" href="geoff-troan/contact.vcf" download="geoff-troan.vcf">VCARD</a>
+        <a class="pill-button" href="geoff-troan/qr-print.png" download="geoff-troan-qr.png">PRINT QR</a>
+      </div>
+      <img class="team-qr" src="geoff-troan/qr.svg" alt="QR code for Geoffrey (Jeff) J. Troan" loading="lazy">
+    </div>
+  </article>
+
+  <article class="team-card" style="--d:360ms">
+    <div class="phone-col">
+      <a class="phone" href="james-maples/" title="Open James N. Maples's card">
+        <span class="phone-notch"></span>
+        <iframe src="james-maples/" loading="lazy" tabindex="-1" title="Preview of James N. Maples's card"></iframe>
+        <span class="phone-glass"></span>
+      </a>
+    </div>
+    <div class="team-info">
+      <div class="team-photo"><img src="james-maples/photo.jpg" alt=""></div>
+      <h3 class="team-name">James N. Maples</h3>
+      <p class="team-role">Lead Economist</p>
+      <div class="team-links">
+        <a class="pill-button primary" href="james-maples/">OPEN CARD <span class="arrow">→</span></a>
+        <a class="pill-button" href="james-maples/contact.vcf" download="james-maples.vcf">VCARD</a>
+        <a class="pill-button" href="james-maples/qr-print.png" download="james-maples-qr.png">PRINT QR</a>
+      </div>
+      <img class="team-qr" src="james-maples/qr.svg" alt="QR code for James N. Maples" loading="lazy">
+    </div>
+  </article>
+
+  <article class="team-card" style="--d:450ms">
+    <div class="phone-col">
+      <a class="phone" href="janie-hanna/" title="Open Janie S. Hanna's card">
+        <span class="phone-notch"></span>
+        <iframe src="janie-hanna/" loading="lazy" tabindex="-1" title="Preview of Janie S. Hanna's card"></iframe>
+        <span class="phone-glass"></span>
+      </a>
+    </div>
+    <div class="team-info">
+      <div class="team-photo"><img src="janie-hanna/photo.jpg" alt=""></div>
+      <h3 class="team-name">Janie S. Hanna</h3>
+      <p class="team-role">Vice President, Program Management</p>
+      <div class="team-links">
+        <a class="pill-button primary" href="janie-hanna/">OPEN CARD <span class="arrow">→</span></a>
+        <a class="pill-button" href="janie-hanna/contact.vcf" download="janie-hanna.vcf">VCARD</a>
+        <a class="pill-button" href="janie-hanna/qr-print.png" download="janie-hanna-qr.png">PRINT QR</a>
+      </div>
+      <img class="team-qr" src="janie-hanna/qr.svg" alt="QR code for Janie S. Hanna" loading="lazy">
+    </div>
+  </article>
+
+  <article class="team-card" style="--d:540ms">
+    <div class="phone-col">
+      <a class="phone" href="julie-miller/" title="Open Julie M. Miller's card">
+        <span class="phone-notch"></span>
+        <iframe src="julie-miller/" loading="lazy" tabindex="-1" title="Preview of Julie M. Miller's card"></iframe>
+        <span class="phone-glass"></span>
+      </a>
+    </div>
+    <div class="team-info">
+      <div class="team-photo"><img src="julie-miller/photo.jpg" alt=""></div>
+      <h3 class="team-name">Julie M. Miller</h3>
+      <p class="team-role">Managing Director</p>
+      <div class="team-links">
+        <a class="pill-button primary" href="julie-miller/">OPEN CARD <span class="arrow">→</span></a>
+        <a class="pill-button" href="julie-miller/contact.vcf" download="julie-miller.vcf">VCARD</a>
+        <a class="pill-button" href="julie-miller/qr-print.png" download="julie-miller-qr.png">PRINT QR</a>
+      </div>
+      <img class="team-qr" src="julie-miller/qr.svg" alt="QR code for Julie M. Miller" loading="lazy">
+    </div>
+  </article>
+
+  <article class="team-card" style="--d:630ms">
+    <div class="phone-col">
+      <a class="phone" href="mac-smith/" title="Open Mac Smith's card">
+        <span class="phone-notch"></span>
+        <iframe src="mac-smith/" loading="lazy" tabindex="-1" title="Preview of Mac Smith's card"></iframe>
+        <span class="phone-glass"></span>
+      </a>
+    </div>
+    <div class="team-info">
+      <div class="team-photo"><img src="mac-smith/photo.jpg" alt=""></div>
+      <h3 class="team-name">Mac Smith</h3>
+      <p class="team-role">Data Scientist</p>
+      <div class="team-links">
+        <a class="pill-button primary" href="mac-smith/">OPEN CARD <span class="arrow">→</span></a>
+        <a class="pill-button" href="mac-smith/contact.vcf" download="mac-smith.vcf">VCARD</a>
+        <a class="pill-button" href="mac-smith/qr-print.png" download="mac-smith-qr.png">PRINT QR</a>
+      </div>
+      <img class="team-qr" src="mac-smith/qr.svg" alt="QR code for Mac Smith" loading="lazy">
+    </div>
+  </article>
+
+  <article class="team-card" style="--d:720ms">
+    <div class="phone-col">
+      <a class="phone" href="matt-samler/" title="Open Matthew T. Samler's card">
+        <span class="phone-notch"></span>
+        <iframe src="matt-samler/" loading="lazy" tabindex="-1" title="Preview of Matthew T. Samler's card"></iframe>
+        <span class="phone-glass"></span>
+      </a>
+    </div>
+    <div class="team-info">
+      <div class="team-photo"><img src="matt-samler/photo.jpg" alt=""></div>
+      <h3 class="team-name">Matthew T. Samler</h3>
+      <p class="team-role">Managing Partner, Executive Managing Director</p>
+      <div class="team-links">
+        <a class="pill-button primary" href="matt-samler/">OPEN CARD <span class="arrow">→</span></a>
+        <a class="pill-button" href="matt-samler/contact.vcf" download="matt-samler.vcf">VCARD</a>
+        <a class="pill-button" href="matt-samler/qr-print.png" download="matt-samler-qr.png">PRINT QR</a>
+      </div>
+      <img class="team-qr" src="matt-samler/qr.svg" alt="QR code for Matthew T. Samler" loading="lazy">
+    </div>
+  </article>
+
+  <article class="team-card" style="--d:810ms">
+    <div class="phone-col">
+      <a class="phone" href="taylor-blanks/" title="Open Taylor Blanks's card">
+        <span class="phone-notch"></span>
+        <iframe src="taylor-blanks/" loading="lazy" tabindex="-1" title="Preview of Taylor Blanks's card"></iframe>
+        <span class="phone-glass"></span>
+      </a>
+    </div>
+    <div class="team-info">
+      <div class="team-photo"><img src="taylor-blanks/photo.jpg" alt=""></div>
+      <h3 class="team-name">Taylor Blanks</h3>
+      <p class="team-role">Program Support Manager</p>
+      <div class="team-links">
+        <a class="pill-button primary" href="taylor-blanks/">OPEN CARD <span class="arrow">→</span></a>
+        <a class="pill-button" href="taylor-blanks/contact.vcf" download="taylor-blanks.vcf">VCARD</a>
+        <a class="pill-button" href="taylor-blanks/qr-print.png" download="taylor-blanks-qr.png">PRINT QR</a>
+      </div>
+      <img class="team-qr" src="taylor-blanks/qr.svg" alt="QR code for Taylor Blanks" loading="lazy">
+    </div>
+  </article>
+
+  <article class="team-card" style="--d:900ms">
+    <div class="phone-col">
+      <a class="phone" href="william-floyd/" title="Open William H. Floyd IV's card">
+        <span class="phone-notch"></span>
+        <iframe src="william-floyd/" loading="lazy" tabindex="-1" title="Preview of William H. Floyd IV's card"></iframe>
+        <span class="phone-glass"></span>
+      </a>
+    </div>
+    <div class="team-info">
+      <div class="team-photo"><img src="william-floyd/photo.jpg" alt=""></div>
+      <h3 class="team-name">William H. Floyd IV</h3>
+      <p class="team-role">Senior Vice President, Strategy and Communications</p>
+      <div class="team-links">
+        <a class="pill-button primary" href="william-floyd/">OPEN CARD <span class="arrow">→</span></a>
+        <a class="pill-button" href="william-floyd/contact.vcf" download="william-floyd.vcf">VCARD</a>
+        <a class="pill-button" href="william-floyd/qr-print.png" download="william-floyd-qr.png">PRINT QR</a>
+      </div>
+      <img class="team-qr" src="william-floyd/qr.svg" alt="QR code for William H. Floyd IV" loading="lazy">
+    </div>
+  </article>
+  </section>
+</main>
+
+<footer class="site-footer">VISTA SITE SELECTION · <em>find the perfect site</em></footer>
+
+<script src="assets/grid-bg.js"></script>
+</body>
+</html>

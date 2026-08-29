@@ -1,0 +1,13 @@
+{
+  "company": "Vista Site Selection",
+  "logoText": "VISTA SITE SELECTION",
+  "baseUrl": "https://mrwhfloydiv.github.io/vista-business-cards",
+  "brand": {
+    "primary": "#b22c2e",
+    "primaryDark": "#8f2325",
+    "ink": "#1a1a1a",
+    "paper": "#ffffff",
+    "muted": "#6b7280"
+  },
+  "analyticsEndpoint": ""
+}

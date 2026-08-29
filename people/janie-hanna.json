@@ -1,0 +1,19 @@
+{
+  "slug": "janie-hanna",
+  "firstName": "Janie S.",
+  "lastName": "Hanna",
+  "displayName": "Janie S. Hanna",
+  "title": "Vice President, Program Management",
+  "company": "Vista Site Selection",
+  "mobile": "+1 (440) 387-7506",
+  "workPhone": "",
+  "email": "jhanna@vistasiteselection.com",
+  "summary": "",
+  "links": [
+    {
+      "label": "Company Website",
+      "url": "https://www.vistasiteselection.com"
+    }
+  ],
+  "linkedin": "https://www.linkedin.com/in/janie-hanna/"
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "julie-miller",
+  "firstName": "Julie M.",
+  "lastName": "Miller",
+  "displayName": "Julie M. Miller",
+  "title": "Managing Director",
+  "company": "Vista Site Selection",
+  "mobile": "+1 (972) 352-1940",
+  "workPhone": "",
+  "email": "jmmiller@vistasiteselection.com",
+  "summary": "",
+  "links": [
+    {
+      "label": "Company Website",
+      "url": "https://www.vistasiteselection.com"
+    }
+  ],
+  "linkedin": "https://www.linkedin.com/in/julie-miller-ccip/"
+}

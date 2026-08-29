@@ -1,0 +1,19 @@
+{
+  "slug": "james-maples",
+  "firstName": "James N.",
+  "lastName": "Maples",
+  "displayName": "James N. Maples",
+  "title": "Lead Economist",
+  "company": "Vista Site Selection",
+  "mobile": "+1 (865) 254-6395",
+  "workPhone": "",
+  "email": "jnmaples@vistasiteselection.com",
+  "summary": "",
+  "links": [
+    {
+      "label": "Company Website",
+      "url": "https://www.vistasiteselection.com"
+    }
+  ],
+  "linkedin": "https://www.linkedin.com/in/james-maples/"
+}

@@ -1,0 +1,19 @@
+{
+  "slug": "mac-smith",
+  "firstName": "Mac",
+  "lastName": "Smith",
+  "displayName": "Mac Smith",
+  "title": "Data Scientist",
+  "company": "Vista Site Selection",
+  "mobile": "+1 (614) 905-6397",
+  "workPhone": "",
+  "email": "tmsmith@vistasiteselection.com",
+  "summary": "",
+  "links": [
+    {
+      "label": "Company Website",
+      "url": "https://www.vistasiteselection.com"
+    }
+  ],
+  "linkedin": "https://www.linkedin.com/in/theodoremsmith/"
+}

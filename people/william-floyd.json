@@ -1,0 +1,16 @@
+{
+  "slug": "william-floyd",
+  "firstName": "William H.",
+  "lastName": "Floyd IV",
+  "displayName": "William H. Floyd IV",
+  "title": "Senior Vice President, Strategy and Communications",
+  "company": "Vista Site Selection",
+  "mobile": "+1 (972) 415-9197",
+  "workPhone": "+1 (713) 574-8363",
+  "email": "whfloyd@vistasiteselection.com",
+  "summary": "",
+  "links": [
+    { "label": "Company Website", "url": "https://www.vistasiteselection.com" }
+  ],
+  "linkedin": "https://www.linkedin.com/in/whfiv/"
+}
