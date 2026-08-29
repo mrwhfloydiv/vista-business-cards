@@ -26,6 +26,13 @@ body{min-height:100vh;display:flex;flex-direction:column;
              radial-gradient(700px 400px at -80px 600px, rgba(235,170,31,.08), transparent 60%), var(--paper)}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
 
+/* Interactive grid canvas + grain — same living background as the cards */
+.bg-grid{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:0;display:block}
+.bg-grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.18;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.08  0 0 0 0 0.10  0 0 0 0 0.11  0 0 0 0.5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.site-header{position:sticky;z-index:20}
+.layout{position:relative;z-index:2}
+
 .site-header{display:flex;justify-content:space-between;align-items:center;padding:16px 28px;
   border-bottom:1px solid var(--line);background:rgba(250,250,250,.75);backdrop-filter:blur(10px);
   position:sticky;top:0;z-index:20}
@@ -137,6 +144,9 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
   <div id="status">ready</div>
 </header>
 
+<canvas id="bgGrid" class="bg-grid" aria-hidden="true"></canvas>
+<div class="bg-grain" aria-hidden="true"></div>
+
 <div class="layout">
   <nav class="roster">
     <h2>The Team</h2>
@@ -233,14 +243,15 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       <h3><span class="step-num">05</span>Tracking &amp; <em>settings.</em></h3>
       <div class="field"><label>GoatCounter code · free at goatcounter.com</label><input id="s_goat" placeholder="e.g. vistacards"></div>
       <div class="field" style="margin-top:10px"><label>Command Station endpoint · optional, later</label><input id="s_endpoint" placeholder="https://…/api/card-scan"></div>
-      <div class="btnrow">
-        <button class="cta" id="settingsSave">SAVE SETTINGS →</button>
+      <div class="btnrow" style="flex-direction:column;align-items:stretch">
+        <button class="cta" id="settingsSave" style="justify-content:center">SAVE SETTINGS →</button>
       </div>
       <div class="hint">Once a GoatCounter code is set, every card counts scans (page views) AND taps — save contact, call, text, email, website, LinkedIn — per person, with device, browser, and country. Free, anonymous, no cookie banner needed. Stats live at <span id="goatLink">&lt;code&gt;.goatcounter.com</span> and are API-queryable for the Command Station.</div>
     </div>
   </aside>
 </div>
 
+<script src="/assets/grid-bg.js"></script>
 <script>
 let people = [], site = {}, current = null, qr = null;
 
