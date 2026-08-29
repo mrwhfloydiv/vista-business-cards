@@ -116,7 +116,10 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .swatches{display:flex;gap:8px;flex-wrap:wrap}
 .swatch{width:26px;height:26px;border-radius:50%;border:2px solid white;box-shadow:0 0 0 1.5px var(--line);cursor:pointer;transition:transform var(--t)}
 .swatch:hover{transform:scale(1.12)}
-.field input[type=color]{padding:2px;height:38px;cursor:pointer}
+.field input[type=color]{padding:2px;height:40px;cursor:pointer}
+.colorrow{display:flex;gap:8px}
+.colorrow input[type=color]{width:54px;flex-shrink:0}
+.colorrow input[type=text]{flex:1;font-family:'IBM Plex Mono',monospace;letter-spacing:.06em}
 .field input[type=range]{padding:0}
 .hint{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;color:var(--ink-soft);margin-top:8px;line-height:1.6}
 </style>
@@ -199,8 +202,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
         <div class="field"><label>Eye centers</label>
           <select id="q_eyeDot"><option value="auto">Auto (match eyes)</option><option value="square">Square</option><option value="dot">Dot</option></select>
         </div>
-        <div class="field"><label>Pattern color</label><input type="color" id="q_dotColor" value="#14191c"></div>
-        <div class="field"><label>Eye color</label><input type="color" id="q_cornerColor" value="#b22c2e"></div>
+        <div class="field"><label>Pattern color</label>
+          <div class="colorrow"><input type="color" id="q_dotColor" value="#14191c"><input type="text" id="q_dotColorHex" value="#14191c" maxlength="7" spellcheck="false"></div>
+        </div>
+        <div class="field"><label>Eye color</label>
+          <div class="colorrow"><input type="color" id="q_cornerColor" value="#b22c2e"><input type="text" id="q_cornerColorHex" value="#b22c2e" maxlength="7" spellcheck="false"></div>
+        </div>
         <div class="field"><label>Center logo</label>
           <select id="q_logo">
             <option value="/assets/vista-v-badge.png">Vista V · circle badge</option>
@@ -212,10 +219,12 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
         <div class="field"><label>Logo size</label><input type="range" id="q_logoSize" min="0.2" max="0.5" step="0.05" value="0.35"></div>
         <div class="field wide" style="grid-column:1 / -1"><button class="pill" id="logoUpload" style="justify-content:center">⬆ UPLOAD CUSTOM LOGO (PNG)</button></div>
       </div>
-      <div class="btnrow">
-        <button class="cta" id="qrApply">USE ON THIS CARD →</button>
-        <button class="pill" id="qrApplyAll">APPLY TO ALL</button>
-        <button class="pill danger" id="qrReset">RESET TO PLAIN</button>
+      <div class="btnrow" style="flex-direction:column;align-items:stretch">
+        <button class="cta" id="qrApply" style="justify-content:center">USE ON THIS CARD →</button>
+        <div style="display:flex;gap:10px">
+          <button class="pill" id="qrApplyAll" style="flex:1;justify-content:center">APPLY TO ALL</button>
+          <button class="pill danger" id="qrReset" style="flex:1;justify-content:center">RESET TO PLAIN</button>
+        </div>
       </div>
       <div class="hint">Designed QRs are exported at 1200px and used for PRINT QR + the dashboard. Scan-test a printed size before ordering cards.</div>
     </div>
@@ -478,6 +487,22 @@ function refreshQR() {
 ['q_dots','q_corners','q_eyeDot','q_dotColor','q_cornerColor','q_logo','q_logoSize'].forEach(id =>
   $(id).addEventListener('input', () => { if (current) refreshQR(); saveQrStyle(); }));
 
+// two-way sync: color swatch ⇄ hex text field
+function bindColor(colorId, hexId) {
+  $(colorId).addEventListener('input', () => { $(hexId).value = $(colorId).value; });
+  $(hexId).addEventListener('input', () => {
+    let v = $(hexId).value.trim();
+    if (/^[0-9a-fA-F]{6}$/.test(v)) v = '#' + v;
+    if (/^#[0-9a-fA-F]{6}$/.test(v)) {
+      $(colorId).value = v.toLowerCase();
+      if (current) refreshQR();
+      saveQrStyle();
+    }
+  });
+}
+bindColor('q_dotColor', 'q_dotColorHex');
+bindColor('q_cornerColor', 'q_cornerColorHex');
+
 // custom center-logo upload
 $('logoUpload').addEventListener('click', () => { uploadKind = 'qr-logo'; $('fileInput').click(); });
 async function detectCustomLogo() {
@@ -505,7 +530,9 @@ function loadQrStyle() {
   $('q_eyeDot').value = s.eyeDot || 'auto';
   if ((s.logo || '').includes('qr-logo-custom')) $('customLogoOpt').hidden = false;
   $('q_dotColor').value = s.dotColor || '#14191c';
+  $('q_dotColorHex').value = $('q_dotColor').value;
   $('q_cornerColor').value = s.cornerColor || '#b22c2e';
+  $('q_cornerColorHex').value = $('q_cornerColor').value;
   $('q_logo').value = s.logo != null ? s.logo : '/assets/vista-v.png';
   $('q_logoSize').value = s.logoSize || '0.35';
 }
