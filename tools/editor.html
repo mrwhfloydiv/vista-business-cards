@@ -219,6 +219,16 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       </div>
       <div class="hint">Designed QRs are exported at 1200px and used for PRINT QR + the dashboard. Scan-test a printed size before ordering cards.</div>
     </div>
+
+    <div class="panel">
+      <h3><span class="step-num">05</span>Tracking &amp; <em>settings.</em></h3>
+      <div class="field"><label>GoatCounter code · free at goatcounter.com</label><input id="s_goat" placeholder="e.g. vistacards"></div>
+      <div class="field" style="margin-top:10px"><label>Command Station endpoint · optional, later</label><input id="s_endpoint" placeholder="https://…/api/card-scan"></div>
+      <div class="btnrow">
+        <button class="cta" id="settingsSave">SAVE SETTINGS →</button>
+      </div>
+      <div class="hint">Once a GoatCounter code is set, every card counts scans (page views) AND taps — save contact, call, text, email, website, LinkedIn — per person, with device, browser, and country. Free, anonymous, no cookie banner needed. Stats live at <span id="goatLink">&lt;code&gt;.goatcounter.com</span> and are API-queryable for the Command Station.</div>
+    </div>
   </aside>
 </div>
 
@@ -526,7 +536,27 @@ $('qrReset').addEventListener('click', async () => {
   catch (e) { status('error: ' + e.message, 'busy'); }
 });
 
-load().then(() => loadQrStyle()).catch(e => status('error: ' + e.message, 'busy'));
+// ---------- tracking settings ----------
+function loadSettings() {
+  $('s_goat').value = site.goatcounter || '';
+  $('s_endpoint').value = site.analyticsEndpoint || '';
+  if (site.goatcounter) $('goatLink').innerHTML = `<a href="https://${site.goatcounter}.goatcounter.com" target="_blank" style="color:var(--vista-red)">${site.goatcounter}.goatcounter.com</a>`;
+}
+$('settingsSave').addEventListener('click', async () => {
+  try {
+    status('saving settings + rebuilding…', 'busy');
+    await api('/api/site', { method: 'POST', body: JSON.stringify({
+      goatcounter: $('s_goat').value.trim(),
+      analyticsEndpoint: $('s_endpoint').value.trim()
+    })});
+    await api('/api/build', { method: 'POST' });
+    status('settings saved · site rebuilt — remember to git push', 'ok');
+    await load(current && current.slug);
+    loadSettings();
+  } catch (e) { status('error: ' + e.message, 'busy'); }
+});
+
+load().then(() => { loadQrStyle(); loadSettings(); }).catch(e => status('error: ' + e.message, 'busy'));
 </script>
 </body>
 </html>

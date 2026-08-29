@@ -310,6 +310,10 @@ main {
   transition: color var(--t);
 }
 .qa:hover .qa-label { color: var(--vista-red); }
+@media (max-width: 350px) {
+  .quick-actions { gap: 12px; }
+  .qa-btn { width: 50px; height: 50px; }
+}
 
 /* ============ SAVE CTA ============ */
 /* Animated brand-color border: Vista red → gold → blue flowing around the

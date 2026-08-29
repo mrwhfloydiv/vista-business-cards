@@ -226,22 +226,43 @@ function buildExtraSections(person, cardart) {
 
 function buildAnalytics(person) {
   const parts = [];
-  // GoatCounter: free scan analytics per card (path = /<slug>/), API-queryable
-  // later from the Command Station.
+  // GoatCounter: free, no-consent-needed analytics. The pageview (= a scan)
+  // is counted by count.js; taps on save/call/text/email/links are counted
+  // as events (paths like <slug>/save-contact). API-queryable later from
+  // the Command Station.
   if (site.goatcounter) {
     parts.push(`<script data-goatcounter="https://${site.goatcounter}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>`);
   }
-  // Custom beacon: for the Command Station's own endpoint once it exists.
-  if (site.analyticsEndpoint) {
+  if (site.goatcounter || site.analyticsEndpoint) {
     parts.push(`<script>
-  try {
-    navigator.sendBeacon(${JSON.stringify(site.analyticsEndpoint)}, JSON.stringify({
-      card: ${JSON.stringify(person.slug)},
-      t: Date.now(),
-      ref: document.referrer,
-      ua: navigator.userAgent
-    }));
-  } catch (e) {}
+  (function () {
+    var slug = ${JSON.stringify(person.slug)};
+    var endpoint = ${JSON.stringify(site.analyticsEndpoint || '')};
+    function report(action) {
+      try {
+        if (window.goatcounter && window.goatcounter.count) {
+          window.goatcounter.count({ path: slug + '/' + action, title: slug + ' — ' + action, event: true });
+        }
+      } catch (e) {}
+      try {
+        if (endpoint) {
+          navigator.sendBeacon(endpoint, JSON.stringify({
+            card: slug, action: action, t: Date.now(),
+            ref: document.referrer, ua: navigator.userAgent, lang: navigator.language
+          }));
+        }
+      } catch (e) {}
+    }
+    if (endpoint) report('scan');
+    function hook(selector, action) {
+      document.querySelectorAll(selector).forEach(function (el) {
+        el.addEventListener('click', function () { report(typeof action === 'function' ? action(el) : action); });
+      });
+    }
+    hook('.cta-button', 'save-contact');
+    hook('.qa', function (el) { return 'tap-' + (el.querySelector('.qa-label') || {}).textContent.toLowerCase().trim(); });
+    hook('.linkrow', function (el) { return 'open-' + el.textContent.trim().toLowerCase().replace(/[^a-z]+/g, '-').replace(/^-|-$/g, ''); });
+  })();
 </script>`);
   }
   return parts.join('\n');
