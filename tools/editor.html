@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vista Cards — Editor</title>
+<link rel="icon" type="image/png" href="/assets/vista-v.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/qr-code-styling@1.6.0-rc.1/lib/qr-code-styling.js"></script>
+<style>
+:root {
+  --vista-black:#14191c; --vista-red:#b22c2e; --vista-red-dark:#8e2123;
+  --ink:#14191c; --paper:#eceef1; --ink-soft:#5a6168;
+  --line:#d8dbdf; --line-soft:#e3e6ea;
+  --shadow-sm:0 1px 2px rgba(20,25,28,.04),0 1px 3px rgba(20,25,28,.06);
+  --shadow-md:0 4px 14px rgba(20,25,28,.08),0 2px 6px rgba(20,25,28,.04);
+  --radius:14px; --radius-lg:22px; --t:220ms cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:'Manrope',system-ui,sans-serif;font-size:15px;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;display:flex;flex-direction:column;
+  background:radial-gradient(900px 500px at 88% -200px, rgba(181,217,238,.20), transparent 60%),
+             radial-gradient(700px 400px at -80px 600px, rgba(235,170,31,.08), transparent 60%), var(--paper)}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+
+.site-header{display:flex;justify-content:space-between;align-items:center;padding:16px 28px;
+  border-bottom:1px solid var(--line);background:rgba(250,250,250,.75);backdrop-filter:blur(10px);
+  position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:12px}
+.brand img{width:34px;height:34px;object-fit:contain}
+.brand-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;letter-spacing:.04em}
+.brand-name em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--vista-red);font-size:1.22em}
+.brand-tag{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--ink-soft);margin-top:3px}
+#status{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--ink-soft);
+  padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:white;max-width:46vw;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#status.busy{color:var(--vista-red);border-color:var(--vista-red)}
+#status.ok{color:#166534;border-color:#86efac}
+
+.layout{flex:1;display:grid;grid-template-columns:250px minmax(380px,1fr) 400px;gap:0;align-items:start}
+
+/* ---------- roster ---------- */
+.roster{border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:67px;height:calc(100vh - 67px);overflow-y:auto}
+.roster h2, .col h2{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--ink-soft);
+  text-transform:uppercase;margin:4px 8px 12px}
+.person-btn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 10px;border-radius:10px;
+  transition:all var(--t);border:1px solid transparent;margin-bottom:2px}
+.person-btn:hover{background:white;border-color:var(--line)}
+.person-btn.active{background:white;border-color:var(--vista-red);box-shadow:var(--shadow-sm)}
+.person-btn .avatar{width:34px;height:34px;border-radius:50%;background:#fbeaea;color:var(--vista-red);
+  display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;
+  overflow:hidden;flex-shrink:0}
+.person-btn .avatar img{width:100%;height:100%;object-fit:cover}
+.person-btn .pname{font-weight:700;font-size:13px;line-height:1.15}
+.person-btn .ptitle{font-size:10.5px;color:var(--ink-soft);line-height:1.25}
+.add-person{width:100%;margin-top:10px;padding:11px;border:2px dashed var(--line);border-radius:10px;
+  font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;color:var(--ink-soft);transition:all var(--t)}
+.add-person:hover{border-color:var(--vista-red);color:var(--vista-red);background:rgba(178,44,46,.03)}
+
+/* ---------- form ---------- */
+.col{padding:22px 26px 60px}
+.panel{background:white;border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;box-shadow:var(--shadow-sm);margin-bottom:18px}
+.panel h3{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:19px;letter-spacing:-.02em;margin-bottom:14px}
+.panel h3 em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--vista-red);font-size:1.18em}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field.wide{grid-column:1 / -1}
+.field label{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+.field input,.field textarea,.field select{font-family:'Manrope',sans-serif;font-size:14px;font-weight:500;color:var(--ink);
+  padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);outline:none;transition:border-color var(--t)}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--vista-red);background:white}
+.field textarea{resize:vertical;min-height:64px}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.cta{display:inline-flex;align-items:center;gap:10px;background:var(--vista-black);color:white;padding:13px 26px;
+  border-radius:12px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;
+  transition:all var(--t);box-shadow:var(--shadow-md)}
+.cta:hover{background:var(--vista-red);transform:translateY(-2px)}
+.pill{display:inline-flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.06em;
+  background:white;border:1.5px solid var(--line);border-radius:999px;padding:9px 15px;transition:all var(--t)}
+.pill:hover{background:var(--vista-red);color:white;border-color:var(--vista-red)}
+.pill.danger{color:var(--vista-red);border-color:rgba(178,44,46,.35)}
+.pill.danger:hover{background:var(--vista-red);color:white}
+.uploads{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.upload-tile{border:2px dashed var(--line);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:all var(--t);
+  display:flex;flex-direction:column;gap:8px;align-items:center;min-height:120px;justify-content:center;position:relative;overflow:hidden}
+.upload-tile:hover{border-color:var(--vista-red);background:rgba(178,44,46,.03)}
+.upload-tile img{max-width:100%;max-height:84px;border-radius:6px;object-fit:contain}
+.upload-tile .ulabel{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--ink-soft);text-transform:uppercase}
+
+/* ---------- preview + QR ---------- */
+.preview-col{border-left:1px solid var(--line);padding:22px;position:sticky;top:67px;height:calc(100vh - 67px);overflow-y:auto}
+.phone{position:relative;width:250px;height:520px;border-radius:32px;background:var(--vista-black);padding:9px;
+  box-shadow:0 24px 60px rgba(20,25,28,.18);margin:0 auto 8px;overflow:hidden}
+.phone-notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:70px;height:16px;background:var(--vista-black);
+  border-radius:0 0 12px 12px;z-index:3}
+.phone iframe{width:375px;height:753px;border:0;border-radius:24px;background:var(--paper);
+  transform:scale(0.6187);transform-origin:top left}
+.open-link{display:block;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;
+  color:var(--ink-soft);text-decoration:none;margin-bottom:18px}
+.open-link:hover{color:var(--vista-red)}
+.qrbox{display:flex;justify-content:center;margin:10px 0 14px;min-height:220px;align-items:center}
+.qrbox canvas,.qrbox img{border-radius:12px;border:1px solid var(--line-soft);box-shadow:var(--shadow-sm);max-width:220px;max-height:220px}
+.qgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.swatch{width:26px;height:26px;border-radius:50%;border:2px solid white;box-shadow:0 0 0 1.5px var(--line);cursor:pointer;transition:transform var(--t)}
+.swatch:hover{transform:scale(1.12)}
+.field input[type=color]{padding:2px;height:38px;cursor:pointer}
+.field input[type=range]{padding:0}
+.hint{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.08em;color:var(--ink-soft);margin-top:8px;line-height:1.6}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="brand">
+    <img src="/assets/vista-v.png" alt="">
+    <div>
+      <div class="brand-name">VISTA <em>Cards</em> · Editor</div>
+      <div class="brand-tag">LOCAL ADMIN · SAVES REBUILD THE SITE · PUBLISH VIA GIT PUSH</div>
+    </div>
+  </div>
+  <div id="status">ready</div>
+</header>
+
+<div class="layout">
+  <nav class="roster">
+    <h2>The Team</h2>
+    <div id="rosterList"></div>
+    <button class="add-person" id="addPerson">+ New person</button>
+  </nav>
+
+  <section class="col" id="formCol" style="display:none">
+    <div class="panel">
+      <h3>Who they <em>are.</em></h3>
+      <div class="fgrid">
+        <div class="field"><label>First name(s)</label><input id="f_firstName" placeholder="William H."></div>
+        <div class="field"><label>Last name</label><input id="f_lastName" placeholder="Floyd IV"></div>
+        <div class="field wide"><label>Display name</label><input id="f_displayName" placeholder="William H. Floyd IV"></div>
+        <div class="field wide"><label>Title</label><input id="f_title" placeholder="Senior Vice President, Strategy and Communications"></div>
+        <div class="field"><label>Company</label><input id="f_company" value="Vista Site Selection"></div>
+        <div class="field"><label>URL slug</label><input id="f_slug" placeholder="william-floyd"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>How to <em>reach them.</em></h3>
+      <div class="fgrid">
+        <div class="field"><label>Mobile</label><input id="f_mobile" placeholder="+1 (972) 415-9197"></div>
+        <div class="field"><label>Work phone (optional)</label><input id="f_workPhone" placeholder=""></div>
+        <div class="field wide"><label>Email</label><input id="f_email" placeholder="whfloyd@vistasiteselection.com"></div>
+        <div class="field wide"><label>LinkedIn URL</label><input id="f_linkedin" placeholder="https://www.linkedin.com/in/..."></div>
+        <div class="field"><label>Website label</label><input id="f_linkLabel" value="Company Website"></div>
+        <div class="field"><label>Website URL</label><input id="f_linkUrl" value="https://www.vistasiteselection.com"></div>
+        <div class="field wide"><label>Bio / summary (optional)</label><textarea id="f_summary"></textarea></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Their <em>images.</em></h3>
+      <div class="uploads">
+        <div class="upload-tile" data-kind="photo"><span class="ulabel">Headshot</span><img id="img_photo" alt="" hidden><span class="ulabel">click to upload</span></div>
+        <div class="upload-tile" data-kind="cardart-front"><span class="ulabel">Card front</span><img id="img_front" alt="" hidden><span class="ulabel">click to upload</span></div>
+        <div class="upload-tile" data-kind="cardart-back"><span class="ulabel">Card back</span><img id="img_back" alt="" hidden><span class="ulabel">click to upload</span></div>
+      </div>
+      <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" hidden>
+    </div>
+    <div class="btnrow">
+      <button class="cta" id="saveBtn">SAVE &amp; REBUILD →</button>
+      <button class="pill danger" id="deleteBtn">DELETE PERSON</button>
+    </div>
+  </section>
+
+  <aside class="preview-col" id="previewCol" style="display:none">
+    <h2>Live preview</h2>
+    <div class="phone"><span class="phone-notch"></span><iframe id="previewFrame" title="Card preview"></iframe></div>
+    <a class="open-link" id="openLink" href="#" target="_blank">OPEN FULL CARD ↗</a>
+
+    <div class="panel">
+      <h3>QR <em>designer.</em></h3>
+      <div class="qrbox" id="qrBox"></div>
+      <div class="qgrid">
+        <div class="field"><label>Dot style</label>
+          <select id="q_dots"><option value="square">Square</option><option value="dots">Dots</option><option value="rounded">Rounded</option><option value="classy">Classy</option><option value="classy-rounded">Classy rounded</option><option value="extra-rounded">Extra rounded</option></select>
+        </div>
+        <div class="field"><label>Corner style</label>
+          <select id="q_corners"><option value="square">Square</option><option value="dot">Dot</option><option value="extra-rounded">Rounded</option></select>
+        </div>
+        <div class="field"><label>Dot color</label><input type="color" id="q_dotColor" value="#14191c"></div>
+        <div class="field"><label>Corner color</label><input type="color" id="q_cornerColor" value="#b22c2e"></div>
+        <div class="field"><label>Center logo</label>
+          <select id="q_logo"><option value="/assets/vista-v.png">Vista V</option><option value="">None</option></select>
+        </div>
+        <div class="field"><label>Logo size</label><input type="range" id="q_logoSize" min="0.2" max="0.45" step="0.05" value="0.35"></div>
+      </div>
+      <div class="btnrow">
+        <button class="cta" id="qrApply">USE ON THIS CARD →</button>
+        <button class="pill" id="qrApplyAll">APPLY TO ALL</button>
+        <button class="pill danger" id="qrReset">RESET TO PLAIN</button>
+      </div>
+      <div class="hint">Designed QRs are exported at 1200px and used for PRINT QR + the dashboard. Scan-test a printed size before ordering cards.</div>
+    </div>
+  </aside>
+</div>
+
+<script>
+let people = [], site = {}, current = null, qr = null;
+
+const $ = id => document.getElementById(id);
+const status = (msg, cls) => { const s = $('status'); s.textContent = msg; s.className = cls || ''; };
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok || j.ok === false) throw new Error(j.error || (j.build && j.build.output) || r.statusText);
+  return j;
+}
+
+async function load(keepSlug) {
+  [people, site] = await Promise.all([api('/api/people'), api('/api/site')]);
+  renderRoster();
+  const want = keepSlug && people.find(p => p.slug === keepSlug);
+  select(want || people[0] || null);
+}
+
+function renderRoster() {
+  $('rosterList').innerHTML = people.map(p => `
+    <button class="person-btn ${current && current.slug === p.slug ? 'active' : ''}" data-slug="${p.slug}">
+      <span class="avatar">${p._hasPhoto ? `<img src="/docs/${p.slug}/photo.jpg?t=${Date.now()}" onerror="this.remove()">` : initials(p)}</span>
+      <span><span class="pname">${p.displayName}</span><br><span class="ptitle">${p.title}</span></span>
+    </button>`).join('');
+  document.querySelectorAll('.person-btn').forEach(b =>
+    b.addEventListener('click', () => select(people.find(p => p.slug === b.dataset.slug))));
+}
+
+function initials(p) {
+  return ((p.firstName || ' ')[0] + (p.lastName || ' ')[0]).toUpperCase();
+}
+
+function select(p) {
+  current = p;
+  renderRoster();
+  $('formCol').style.display = p ? '' : 'none';
+  $('previewCol').style.display = p ? '' : 'none';
+  if (!p) return;
+  $('f_firstName').value = p.firstName || '';
+  $('f_lastName').value = p.lastName || '';
+  $('f_displayName').value = p.displayName || '';
+  $('f_title').value = p.title || '';
+  $('f_company').value = p.company || site.company || '';
+  $('f_slug').value = p.slug;
+  $('f_slug').disabled = true;
+  $('f_mobile').value = p.mobile || '';
+  $('f_workPhone').value = p.workPhone || '';
+  $('f_email').value = p.email || '';
+  $('f_linkedin').value = p.linkedin || '';
+  $('f_linkLabel').value = (p.links && p.links[0] && p.links[0].label) || 'Company Website';
+  $('f_linkUrl').value = (p.links && p.links[0] && p.links[0].url) || 'https://www.vistasiteselection.com';
+  $('f_summary').value = p.summary || '';
+  refreshImages();
+  refreshPreview();
+  refreshQR();
+}
+
+function refreshImages() {
+  const t = Date.now();
+  setTile('img_photo', current._hasPhoto ? `/docs/${current.slug}/photo.jpg?t=${t}` : null);
+  setTile('img_front', current._hasFront ? `/docs/${current.slug}/card-front.jpg?t=${t}` : null);
+  setTile('img_back', current._hasBack ? `/docs/${current.slug}/card-back.jpg?t=${t}` : null);
+}
+function setTile(id, src) {
+  const img = $(id);
+  if (src) { img.src = src; img.hidden = false; } else { img.hidden = true; img.removeAttribute('src'); }
+}
+
+function refreshPreview() {
+  $('previewFrame').src = `/docs/${current.slug}/?t=${Date.now()}`;
+  $('openLink').href = `/docs/${current.slug}/`;
+}
+
+function collectForm() {
+  return {
+    slug: current.slug,
+    firstName: $('f_firstName').value.trim(),
+    lastName: $('f_lastName').value.trim(),
+    displayName: $('f_displayName').value.trim(),
+    title: $('f_title').value.trim(),
+    company: $('f_company').value.trim(),
+    mobile: $('f_mobile').value.trim(),
+    workPhone: $('f_workPhone').value.trim(),
+    email: $('f_email').value.trim(),
+    summary: $('f_summary').value.trim(),
+    links: $('f_linkUrl').value.trim() ? [{ label: $('f_linkLabel').value.trim() || 'Website', url: $('f_linkUrl').value.trim() }] : [],
+    linkedin: $('f_linkedin').value.trim()
+  };
+}
+
+$('saveBtn').addEventListener('click', async () => {
+  try {
+    status('saving + rebuilding…', 'busy');
+    await api(`/api/person/${current.slug}`, { method: 'POST', body: JSON.stringify(collectForm()) });
+    status('saved · site rebuilt', 'ok');
+    await load(current.slug);
+  } catch (e) { status('error: ' + e.message, 'busy'); }
+});
+
+$('deleteBtn').addEventListener('click', async () => {
+  if (!confirm(`Delete ${current.displayName}'s card? (photos stay in assets/)`)) return;
+  try {
+    status('deleting…', 'busy');
+    await api(`/api/person/${current.slug}`, { method: 'DELETE' });
+    status('deleted · site rebuilt', 'ok');
+    current = null;
+    await load();
+  } catch (e) { status('error: ' + e.message, 'busy'); }
+});
+
+$('addPerson').addEventListener('click', async () => {
+  const name = prompt('Full display name (e.g. "Jane Q. Public"):');
+  if (!name) return;
+  const parts = name.trim().split(/\s+/);
+  const lastName = parts.pop() || '';
+  const firstName = parts.join(' ');
+  const slug = name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  try {
+    status('creating…', 'busy');
+    await api(`/api/person/${slug}`, { method: 'POST', body: JSON.stringify({
+      slug, firstName, lastName, displayName: name.trim(), title: 'Title goes here',
+      company: site.company, mobile: '', workPhone: '', email: '', summary: '',
+      links: [{ label: 'Company Website', url: 'https://www.vistasiteselection.com' }], linkedin: ''
+    })});
+    status('created · fill in their details', 'ok');
+    await load(slug);
+  } catch (e) { status('error: ' + e.message, 'busy'); }
+});
+
+// ---------- uploads ----------
+let uploadKind = null;
+document.querySelectorAll('.upload-tile').forEach(tile =>
+  tile.addEventListener('click', () => { uploadKind = tile.dataset.kind; $('fileInput').click(); }));
+$('fileInput').addEventListener('change', () => {
+  const file = $('fileInput').files[0];
+  $('fileInput').value = '';
+  if (!file || !uploadKind) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    try {
+      status('uploading + rebuilding…', 'busy');
+      await api('/api/upload', { method: 'POST', body: JSON.stringify({ slug: current.slug, kind: uploadKind, dataUrl: reader.result }) });
+      status('uploaded · site rebuilt', 'ok');
+      await load(current.slug);
+    } catch (e) { status('error: ' + e.message, 'busy'); }
+  };
+  reader.readAsDataURL(file);
+});
+
+// ---------- QR designer ----------
+function qrConfig(size, slug) {
+  const logo = $('q_logo').value;
+  return {
+    width: size, height: size, type: 'canvas',
+    data: (site.baseUrl || '').replace(/\/$/, '') + '/' + slug + '/',
+    margin: Math.round(size * 0.033),
+    qrOptions: { errorCorrectionLevel: 'H' },
+    image: logo || undefined,
+    imageOptions: { crossOrigin: 'anonymous', margin: Math.round(size * 0.017), imageSize: parseFloat($('q_logoSize').value) },
+    dotsOptions: { type: $('q_dots').value, color: $('q_dotColor').value },
+    cornersSquareOptions: { type: $('q_corners').value, color: $('q_cornerColor').value },
+    cornersDotOptions: { type: $('q_corners').value === 'square' ? 'square' : 'dot', color: $('q_cornerColor').value },
+    backgroundOptions: { color: '#ffffff' }
+  };
+}
+
+function refreshQR() {
+  $('qrBox').innerHTML = '';
+  qr = new QRCodeStyling(qrConfig(220, current.slug));
+  qr.append($('qrBox'));
+}
+['q_dots','q_corners','q_dotColor','q_cornerColor','q_logo','q_logoSize'].forEach(id =>
+  $(id).addEventListener('input', () => { if (current) refreshQR(); saveQrStyle(); }));
+
+let qrStyleTimer = null;
+function saveQrStyle() {
+  clearTimeout(qrStyleTimer);
+  qrStyleTimer = setTimeout(() => api('/api/site', { method: 'POST', body: JSON.stringify({ qrStyle: {
+    dots: $('q_dots').value, corners: $('q_corners').value, dotColor: $('q_dotColor').value,
+    cornerColor: $('q_cornerColor').value, logo: $('q_logo').value, logoSize: $('q_logoSize').value
+  }})}).catch(() => {}), 600);
+}
+function loadQrStyle() {
+  const s = site.qrStyle;
+  if (!s) return;
+  $('q_dots').value = s.dots || 'square';
+  $('q_corners').value = s.corners || 'square';
+  $('q_dotColor').value = s.dotColor || '#14191c';
+  $('q_cornerColor').value = s.cornerColor || '#b22c2e';
+  $('q_logo').value = s.logo != null ? s.logo : '/assets/vista-v.png';
+  $('q_logoSize').value = s.logoSize || '0.35';
+}
+
+async function exportQr(slug) {
+  const big = new QRCodeStyling(qrConfig(1200, slug));
+  const blob = await big.getRawData('png');
+  const dataUrl = await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result); fr.readAsDataURL(blob); });
+  await api('/api/upload', { method: 'POST', body: JSON.stringify({ slug, kind: 'qr-override', dataUrl }) });
+}
+
+$('qrApply').addEventListener('click', async () => {
+  try { status('exporting QR + rebuilding…', 'busy'); await exportQr(current.slug); status('designed QR applied', 'ok'); await load(current.slug); }
+  catch (e) { status('error: ' + e.message, 'busy'); }
+});
+$('qrApplyAll').addEventListener('click', async () => {
+  try {
+    for (let i = 0; i < people.length; i++) {
+      status(`exporting QR ${i + 1}/${people.length}…`, 'busy');
+      await exportQr(people[i].slug);
+    }
+    status('designed QRs applied to everyone', 'ok');
+    await load(current.slug);
+  } catch (e) { status('error: ' + e.message, 'busy'); }
+});
+$('qrReset').addEventListener('click', async () => {
+  try { status('resetting…', 'busy'); await api('/api/upload', { method: 'POST', body: JSON.stringify({ slug: current.slug, kind: 'qr-clear', dataUrl: '' }) }); status('back to plain QR', 'ok'); await load(current.slug); }
+  catch (e) { status('error: ' + e.message, 'busy'); }
+});
+
+load().then(() => loadQrStyle()).catch(e => status('error: ' + e.message, 'busy'));
+</script>
+</body>
+</html>

@@ -104,6 +104,8 @@ const PY_RESIZE = [
 
 function resizeImage(src, dest, size, quality) {
   try {
+    // mtime cache: skip the resize when the output is newer than the source
+    if (fs.existsSync(dest) && fs.statSync(dest).mtimeMs > fs.statSync(src).mtimeMs) return true;
     execFileSync('python', ['-c', PY_RESIZE, src, dest, String(size), String(quality)], { stdio: 'pipe' });
     return fs.existsSync(dest);
   } catch (e) {
@@ -223,8 +225,15 @@ function buildExtraSections(person, cardart) {
 }
 
 function buildAnalytics(person) {
-  if (!site.analyticsEndpoint) return '';
-  return `<script>
+  const parts = [];
+  // GoatCounter: free scan analytics per card (path = /<slug>/), API-queryable
+  // later from the Command Station.
+  if (site.goatcounter) {
+    parts.push(`<script data-goatcounter="https://${site.goatcounter}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>`);
+  }
+  // Custom beacon: for the Command Station's own endpoint once it exists.
+  if (site.analyticsEndpoint) {
+    parts.push(`<script>
   try {
     navigator.sendBeacon(${JSON.stringify(site.analyticsEndpoint)}, JSON.stringify({
       card: ${JSON.stringify(person.slug)},
@@ -233,7 +242,9 @@ function buildAnalytics(person) {
       ua: navigator.userAgent
     }));
   } catch (e) {}
-</script>`;
+</script>`);
+  }
+  return parts.join('\n');
 }
 
 function renderCard(person, photoFile, cardart) {
@@ -281,7 +292,7 @@ function rosterPage(people) {
         <a class="pill-button" href="${p.slug}/contact.vcf" download="${p.slug}.vcf">VCARD</a>
         <a class="pill-button" href="${p.slug}/qr-print.png" download="${p.slug}-qr.png">PRINT QR</a>
       </div>
-      <img class="team-qr" src="${p.slug}/qr.svg" alt="QR code for ${esc(p.displayName)}" loading="lazy">
+      <img class="team-qr" src="${p.slug}/${p._qrThumb || 'qr.svg'}" alt="QR code for ${esc(p.displayName)}" loading="lazy">
     </div>
   </article>`;
   }).join('\n');
@@ -591,7 +602,8 @@ async function main() {
         person._photoFile = 'photo' + path.extname(photoSrc).toLowerCase();
         fs.copyFileSync(photoSrc, path.join(dir, person._photoFile));
       }
-      const thumb = path.join(dir, '.vcf-photo.jpg');
+      const thumb = path.join(ROOT, 'assets', '.cache', `${person.slug}-vcf.jpg`);
+      fs.mkdirSync(path.dirname(thumb), { recursive: true });
       if (resizeImage(photoSrc, thumb, 480, 80)) {
         vcfPhoto = thumb;
       } else if (['.jpg', '.jpeg', '.png'].includes(path.extname(photoSrc).toLowerCase())) {
@@ -618,13 +630,21 @@ async function main() {
     // page + vcard
     fs.writeFileSync(path.join(dir, 'index.html'), renderCard(person, person._photoFile, cardart));
     fs.writeFileSync(path.join(dir, 'contact.vcf'), buildVcf(person, vcfPhoto));
-    if (vcfPhoto && vcfPhoto.endsWith('.vcf-photo.jpg')) fs.unlinkSync(vcfPhoto);
 
-    // QR codes → the person's card URL
+    // QR codes → the person's card URL. If a designed QR exists (exported
+    // from the editor's QR designer, assets/qr-overrides/<slug>.png), it
+    // wins; the plain generated one is the fallback.
     const url = site.baseUrl.replace(/\/$/, '') + '/' + person.slug + '/';
     const qrOpts = { errorCorrectionLevel: 'H', margin: 2, color: { dark: site.brand.primary, light: '#ffffff' } };
     await QRCode.toFile(path.join(dir, 'qr.svg'), url, { ...qrOpts, type: 'svg' });
-    await QRCode.toFile(path.join(dir, 'qr-print.png'), url, { ...qrOpts, width: 1200 });
+    const override = path.join(ROOT, 'assets', 'qr-overrides', `${person.slug}.png`);
+    if (fs.existsSync(override)) {
+      fs.copyFileSync(override, path.join(dir, 'qr-print.png'));
+      person._qrThumb = 'qr-print.png';
+    } else {
+      await QRCode.toFile(path.join(dir, 'qr-print.png'), url, { ...qrOpts, width: 1200 });
+      person._qrThumb = 'qr.svg';
+    }
 
     people.push(person);
     console.log(`✔ ${person.displayName}  →  docs/${person.slug}/  (${url})${photoSrc ? '' : '  [no photo — using initials]'}`);

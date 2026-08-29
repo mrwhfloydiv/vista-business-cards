@@ -6,6 +6,12 @@
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "8765", "--directory", "docs"],
       "port": 8765
+    },
+    {
+      "name": "editor",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tools/edit-server.js"],
+      "port": 8790
     }
   ]
 }

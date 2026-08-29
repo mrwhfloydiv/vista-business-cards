@@ -9,5 +9,7 @@
     "paper": "#ffffff",
     "muted": "#6b7280"
   },
-  "analyticsEndpoint": ""
+  "analyticsEndpoint": "",
+  "goatcounter": "",
+  "qrStyle": null
 }
