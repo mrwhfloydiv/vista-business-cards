@@ -299,8 +299,8 @@ function rosterPage(people) {
   <article class="team-card" style="--d:${i * 90}ms">
     <div class="phone-col">
       <a class="phone" href="${p.slug}/" title="Open ${esc(p.displayName)}'s card">
+        <span class="phone-screen"><iframe src="${p.slug}/" loading="lazy" tabindex="-1" title="Preview of ${esc(p.displayName)}'s card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="${p.slug}/" loading="lazy" tabindex="-1" title="Preview of ${esc(p.displayName)}'s card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>
@@ -460,35 +460,41 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
 .team-card:hover { border-color: var(--vista-black); transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 @media (max-width: 520px) { .team-card { flex-direction: column; align-items: center; text-align: center; } }
 
-/* Phone-frame live preview — the little window into the real card page */
+/* Phone-frame live preview — Samsung-style: slim bezel, punch-hole camera,
+   screen wrapper clips the iframe exactly */
 .phone-col { flex-shrink: 0; }
 .phone {
   display: block;
   position: relative;
   width: 148px;
   height: 300px;
-  border-radius: 22px;
+  border-radius: 18px;
   background: var(--vista-black);
-  padding: 7px;
   box-shadow: var(--shadow-md);
-  overflow: hidden;
   transition: transform var(--t), box-shadow var(--t);
 }
 .phone:hover { transform: translateY(-4px) rotate(-1.2deg); box-shadow: 0 20px 50px rgba(20,25,28,.25); }
+.phone-screen {
+  position: absolute;
+  inset: 6px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--paper);
+}
 .phone-notch {
-  position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
-  width: 44px; height: 12px;
-  background: var(--vista-black);
-  border-radius: 0 0 10px 10px;
+  position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #080b0c;
+  box-shadow: inset 0 0 1.5px 0.5px rgba(90,110,130,.5), 0 0 0 1.5px rgba(8,11,12,.65);
   z-index: 3;
 }
-.phone iframe {
+.phone-screen iframe {
   width: 375px;
-  height: 764px;
+  height: 794px;
   border: 0;
-  border-radius: 16px;
   background: var(--paper);
-  transform: scale(0.3573);
+  transform: scale(0.3627);
   transform-origin: top left;
   pointer-events: none;
 }

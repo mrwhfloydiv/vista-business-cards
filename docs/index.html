@@ -140,35 +140,41 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
 .team-card:hover { border-color: var(--vista-black); transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 @media (max-width: 520px) { .team-card { flex-direction: column; align-items: center; text-align: center; } }
 
-/* Phone-frame live preview — the little window into the real card page */
+/* Phone-frame live preview — Samsung-style: slim bezel, punch-hole camera,
+   screen wrapper clips the iframe exactly */
 .phone-col { flex-shrink: 0; }
 .phone {
   display: block;
   position: relative;
   width: 148px;
   height: 300px;
-  border-radius: 22px;
+  border-radius: 18px;
   background: var(--vista-black);
-  padding: 7px;
   box-shadow: var(--shadow-md);
-  overflow: hidden;
   transition: transform var(--t), box-shadow var(--t);
 }
 .phone:hover { transform: translateY(-4px) rotate(-1.2deg); box-shadow: 0 20px 50px rgba(20,25,28,.25); }
+.phone-screen {
+  position: absolute;
+  inset: 6px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--paper);
+}
 .phone-notch {
-  position: absolute; top: 7px; left: 50%; transform: translateX(-50%);
-  width: 44px; height: 12px;
-  background: var(--vista-black);
-  border-radius: 0 0 10px 10px;
+  position: absolute; top: 11px; left: 50%; transform: translateX(-50%);
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #080b0c;
+  box-shadow: inset 0 0 1.5px 0.5px rgba(90,110,130,.5), 0 0 0 1.5px rgba(8,11,12,.65);
   z-index: 3;
 }
-.phone iframe {
+.phone-screen iframe {
   width: 375px;
-  height: 764px;
+  height: 794px;
   border: 0;
-  border-radius: 16px;
   background: var(--paper);
-  transform: scale(0.3573);
+  transform: scale(0.3627);
   transform-origin: top left;
   pointer-events: none;
 }
@@ -261,8 +267,8 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
   <article class="team-card" style="--d:0ms">
     <div class="phone-col">
       <a class="phone" href="andrea-dishler/" title="Open Andrea Dishler's card">
+        <span class="phone-screen"><iframe src="andrea-dishler/" loading="lazy" tabindex="-1" title="Preview of Andrea Dishler's card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="andrea-dishler/" loading="lazy" tabindex="-1" title="Preview of Andrea Dishler's card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>
@@ -282,8 +288,8 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
   <article class="team-card" style="--d:90ms">
     <div class="phone-col">
       <a class="phone" href="chris-magill/" title="Open Chris J. Magill's card">
+        <span class="phone-screen"><iframe src="chris-magill/" loading="lazy" tabindex="-1" title="Preview of Chris J. Magill's card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="chris-magill/" loading="lazy" tabindex="-1" title="Preview of Chris J. Magill's card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>
@@ -303,8 +309,8 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
   <article class="team-card" style="--d:180ms">
     <div class="phone-col">
       <a class="phone" href="evan-stair/" title="Open Evan L. Stair's card">
+        <span class="phone-screen"><iframe src="evan-stair/" loading="lazy" tabindex="-1" title="Preview of Evan L. Stair's card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="evan-stair/" loading="lazy" tabindex="-1" title="Preview of Evan L. Stair's card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>
@@ -324,8 +330,8 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
   <article class="team-card" style="--d:270ms">
     <div class="phone-col">
       <a class="phone" href="geoff-troan/" title="Open Geoffrey (Jeff) J. Troan's card">
+        <span class="phone-screen"><iframe src="geoff-troan/" loading="lazy" tabindex="-1" title="Preview of Geoffrey (Jeff) J. Troan's card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="geoff-troan/" loading="lazy" tabindex="-1" title="Preview of Geoffrey (Jeff) J. Troan's card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>
@@ -345,8 +351,8 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
   <article class="team-card" style="--d:360ms">
     <div class="phone-col">
       <a class="phone" href="james-maples/" title="Open James N. Maples's card">
+        <span class="phone-screen"><iframe src="james-maples/" loading="lazy" tabindex="-1" title="Preview of James N. Maples's card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="james-maples/" loading="lazy" tabindex="-1" title="Preview of James N. Maples's card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>
@@ -366,8 +372,8 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
   <article class="team-card" style="--d:450ms">
     <div class="phone-col">
       <a class="phone" href="janie-hanna/" title="Open Janie S. Hanna's card">
+        <span class="phone-screen"><iframe src="janie-hanna/" loading="lazy" tabindex="-1" title="Preview of Janie S. Hanna's card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="janie-hanna/" loading="lazy" tabindex="-1" title="Preview of Janie S. Hanna's card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>
@@ -387,8 +393,8 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
   <article class="team-card" style="--d:540ms">
     <div class="phone-col">
       <a class="phone" href="julie-miller/" title="Open Julie M. Miller's card">
+        <span class="phone-screen"><iframe src="julie-miller/" loading="lazy" tabindex="-1" title="Preview of Julie M. Miller's card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="julie-miller/" loading="lazy" tabindex="-1" title="Preview of Julie M. Miller's card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>
@@ -408,8 +414,8 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
   <article class="team-card" style="--d:630ms">
     <div class="phone-col">
       <a class="phone" href="mac-smith/" title="Open Mac Smith's card">
+        <span class="phone-screen"><iframe src="mac-smith/" loading="lazy" tabindex="-1" title="Preview of Mac Smith's card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="mac-smith/" loading="lazy" tabindex="-1" title="Preview of Mac Smith's card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>
@@ -429,8 +435,8 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
   <article class="team-card" style="--d:720ms">
     <div class="phone-col">
       <a class="phone" href="matt-samler/" title="Open Matthew T. Samler's card">
+        <span class="phone-screen"><iframe src="matt-samler/" loading="lazy" tabindex="-1" title="Preview of Matthew T. Samler's card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="matt-samler/" loading="lazy" tabindex="-1" title="Preview of Matthew T. Samler's card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>
@@ -450,8 +456,8 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
   <article class="team-card" style="--d:810ms">
     <div class="phone-col">
       <a class="phone" href="taylor-blanks/" title="Open Taylor Blanks's card">
+        <span class="phone-screen"><iframe src="taylor-blanks/" loading="lazy" tabindex="-1" title="Preview of Taylor Blanks's card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="taylor-blanks/" loading="lazy" tabindex="-1" title="Preview of Taylor Blanks's card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>
@@ -471,8 +477,8 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
   <article class="team-card" style="--d:900ms">
     <div class="phone-col">
       <a class="phone" href="william-floyd/" title="Open William H. Floyd IV's card">
+        <span class="phone-screen"><iframe src="william-floyd/" loading="lazy" tabindex="-1" title="Preview of William H. Floyd IV's card"></iframe></span>
         <span class="phone-notch"></span>
-        <iframe src="william-floyd/" loading="lazy" tabindex="-1" title="Preview of William H. Floyd IV's card"></iframe>
         <span class="phone-glass"></span>
       </a>
     </div>

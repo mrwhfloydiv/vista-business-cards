@@ -163,19 +163,23 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 /* ---------- preview + QR ---------- */
 .preview-col{border-left:1px solid var(--line);padding:22px;position:sticky;top:67px;height:calc(100vh - 67px);overflow-y:auto;
   background:rgba(250,250,250,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
-.phone{position:relative;width:250px;height:520px;border-radius:32px;background:var(--vista-black);padding:9px;
-  box-shadow:0 24px 60px rgba(20,25,28,.18);margin:0 auto;overflow:hidden;cursor:pointer;display:block;text-decoration:none;
+/* Samsung-style frame: slim symmetric bezel, punch-hole camera, and a
+   screen wrapper that clips the iframe so the hover overlay matches
+   the display edge-for-edge. */
+.phone{position:relative;width:250px;height:520px;border-radius:26px;background:var(--vista-black);
+  box-shadow:0 24px 60px rgba(20,25,28,.18);margin:0 auto;cursor:pointer;display:block;text-decoration:none;
   transition:transform var(--t)}
 .phone:hover{transform:translateY(-3px)}
-.phone::after{content:'OPEN FULL CARD ↗';position:absolute;inset:9px;border-radius:24px;z-index:4;
+.phone-screen{position:absolute;inset:8px;border-radius:16px;overflow:hidden;background:var(--paper)}
+.phone-screen iframe{width:375px;height:808px;border:0;background:var(--paper);
+  transform:scale(0.624);transform-origin:top left;pointer-events:none}
+.phone-notch{position:absolute;top:16px;left:50%;transform:translateX(-50%);width:11px;height:11px;
+  border-radius:50%;background:#080b0c;box-shadow:inset 0 0 2px 1px rgba(90,110,130,.5), 0 0 0 2px rgba(8,11,12,.65);z-index:3}
+.phone::after{content:'OPEN FULL CARD ↗';position:absolute;inset:8px;border-radius:16px;z-index:4;
   display:flex;align-items:center;justify-content:center;
   font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;letter-spacing:.1em;color:white;
   background:rgba(20,25,28,.55);backdrop-filter:blur(2px);opacity:0;transition:opacity var(--t)}
 .phone:hover::after{opacity:1}
-.phone-notch{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:70px;height:16px;background:var(--vista-black);
-  border-radius:0 0 12px 12px;z-index:3}
-.phone iframe{width:375px;height:753px;border:0;border-radius:24px;background:var(--paper);
-  transform:scale(0.6187);transform-origin:top left}
 .preview-hint{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
   color:var(--ink-soft);margin:-4px 0 20px;line-height:1.6}
 .open-btn{display:flex;justify-content:center;text-decoration:none;margin-top:16px;font-weight:600}
@@ -271,7 +275,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
     <div class="panel">
       <h3>Live <em>preview.</em></h3>
       <div class="preview-hint">Updates on every save · click the phone to open the real page</div>
-      <a class="phone" id="phoneLink" href="#" target="_blank"><span class="phone-notch"></span><iframe id="previewFrame" title="Card preview" tabindex="-1"></iframe></a>
+      <a class="phone" id="phoneLink" href="#" target="_blank"><span class="phone-screen"><iframe id="previewFrame" title="Card preview" tabindex="-1"></iframe></span><span class="phone-notch"></span></a>
       <div class="glow-wrap round" style="margin-top:16px"><a class="pill open-btn" id="openLink" href="#" target="_blank" style="margin-top:0">OPEN FULL CARD ↗</a></div>
     </div>
 

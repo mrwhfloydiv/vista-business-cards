@@ -12,9 +12,9 @@
   "analyticsEndpoint": "",
   "goatcounter": "vistacards",
   "qrStyle": {
-    "dots": "extra-rounded",
+    "dots": "classy",
     "corners": "square",
-    "eyeDot": "auto",
+    "eyeDot": "dot",
     "dotColor": "#14191c",
     "cornerColor": "#b22c2e",
     "logo": "/assets/vista-v-badge.png",
