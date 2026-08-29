@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 187.21 192.33">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #010101;
+      }
+
+      .cls-1, .cls-2 {
+        stroke-width: 0px;
+      }
+
+      .cls-2 {
+        fill: #b22c2e;
+      }
+    </style>
+  </defs>
+  <g id="BLACK_V_RED_ARROW" data-name="BLACK V RED ARROW">
+    <g id="BLACK_V_RED_ARROW-2" data-name="BLACK V RED ARROW">
+      <polygon class="cls-2" points="148.04 0 96.36 92.57 44.69 0 96.36 20.19 148.04 0"/>
+      <polygon class="cls-1" points="0 51.33 38.58 51.33 97.4 153.25 153.43 51.33 187.21 51.33 107.24 192.33 83.88 192.33 0 51.33"/>
+    </g>
+  </g>
+</svg>

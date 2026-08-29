@@ -26,7 +26,7 @@ const OUT = path.join(ROOT, 'docs');
 const PHOTO_DIR = path.join(ROOT, 'assets', 'photos');
 const CARDART_DIR = path.join(ROOT, 'assets', 'cardart');
 const IMG_EXTS = ['.jpg', '.jpeg', '.png'];
-const SHARED_ASSETS = ['vista-v.png', 'vista-v-white.png', 'vista-logo-full.png', 'vista-wordmark.svg', 'grid-bg.js'];
+const SHARED_ASSETS = ['vista-v.png', 'vista-v-white.png', 'vista-logo-full.png', 'vista-wordmark.svg', 'vista-icon.svg', 'grid-bg.js'];
 
 const site = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.json'), 'utf8'));
 const template = fs.readFileSync(path.join(ROOT, 'templates', 'card.html'), 'utf8');
@@ -324,7 +324,7 @@ function rosterPage(people) {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${esc(site.company)} — Card HQ</title>
-<link rel="icon" type="image/png" href="assets/vista-v.png">
+<link rel="icon" type="image/svg+xml" href="assets/vista-icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
@@ -547,7 +547,7 @@ main { flex: 1; width: 100%; max-width: 1080px; margin: 0 auto; padding: 56px 40
 
 <header class="site-header">
   <div class="brand">
-    <img src="assets/vista-v.png" alt="" class="brand-mark">
+    <img src="assets/vista-icon.svg" alt="" class="brand-mark">
     <div class="brand-text">
       <div class="brand-name">VISTA <em class="brand-name-light">Cards</em></div>
       <div class="brand-tag">TEAM CARD HEADQUARTERS</div>

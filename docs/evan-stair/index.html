@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#eceef1">
 <title>Evan L. Stair — Vista Site Selection</title>
 <meta name="description" content="Contact card for Evan L. Stair, Partner, Managing Director – Analytics at Vista Site Selection.">
+<link rel="icon" type="image/svg+xml" href="../assets/vista-icon.svg">
 <link rel="icon" type="image/png" href="../assets/vista-v.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -94,8 +95,8 @@ body {
 }
 .brand { display: block; text-decoration: none; line-height: 0; }
 .brand-wordmark {
-  height: 24px;
-  max-width: min(86vw, 420px);
+  height: clamp(17px, 5.5vw, 26px);
+  max-width: min(86vw, 440px);
   object-fit: contain;
   transition: transform var(--t);
 }
@@ -158,7 +159,7 @@ main {
   box-shadow: var(--shadow-md);
   display: flex; align-items: center; justify-content: center;
 }
-.portrait-badge img { width: 22px; height: 22px; object-fit: contain; }
+.portrait-badge img { width: 21px; height: 21px; object-fit: contain; }
 
 .hero-title {
   font-family: 'Space Grotesk', sans-serif;
@@ -461,9 +462,9 @@ a.row:hover .value { color: var(--vista-red-dark); text-decoration: underline; t
   align-items: center;
   gap: 12px;
 }
-.footer-wordmark {
-  height: 22px;
-  max-width: min(84vw, 380px);
+.footer-icon {
+  height: clamp(36px, 11vw, 48px);
+  width: auto;
   object-fit: contain;
 }
 .site-footer em {
@@ -490,7 +491,7 @@ a.row:hover .value { color: var(--vista-red-dark); text-decoration: underline; t
   <section class="card-hero">
     <div class="portrait-wrap">
       <div class="portrait"><img src="photo.jpg" alt="Evan L. Stair"></div>
-      <div class="portrait-badge"><img src="../assets/vista-v.png" alt=""></div>
+      <div class="portrait-badge"><img src="../assets/vista-icon.svg" alt=""></div>
     </div>
 
     <h1 class="hero-title"><span class="reveal-word" style="--d:180ms">Evan</span>
@@ -528,7 +529,7 @@ a.row:hover .value { color: var(--vista-red-dark); text-decoration: underline; t
 </main>
 
 <footer class="site-footer">
-  <img src="../assets/vista-wordmark.svg" alt="Vista Site Selection" class="footer-wordmark">
+  <img src="../assets/vista-icon.svg" alt="Vista Site Selection" class="footer-icon">
   <em>find the perfect site</em>
 </footer>
 
