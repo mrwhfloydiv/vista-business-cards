@@ -11,5 +11,12 @@
   },
   "analyticsEndpoint": "",
   "goatcounter": "",
-  "qrStyle": null
+  "qrStyle": {
+    "dots": "square",
+    "corners": "extra-rounded",
+    "dotColor": "#14191c",
+    "cornerColor": "#b22c2e",
+    "logo": "/assets/vista-v.png",
+    "logoSize": "0.35"
+  }
 }

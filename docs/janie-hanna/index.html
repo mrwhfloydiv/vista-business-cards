@@ -335,6 +335,29 @@ main {
 .qa:hover .qa-label { color: var(--vista-red); }
 
 /* ============ SAVE CTA ============ */
+/* Animated brand-color border: Vista red → gold → blue flowing around the
+   button, with a matching soft glow — the "this is the one to tap" signal. */
+.cta-wrap {
+  position: relative;
+  border-radius: calc(var(--radius) + 3px);
+  padding: 3px;
+  background: linear-gradient(90deg,
+    var(--vista-red), var(--vista-yellow), var(--vista-blue),
+    var(--vista-yellow), var(--vista-red));
+  background-size: 300% 100%;
+  animation: borderFlow 5s linear infinite, borderGlow 5s linear infinite;
+}
+@keyframes borderFlow {
+  to { background-position: -300% 0; }
+}
+@keyframes borderGlow {
+  0%, 100% { box-shadow: 0 6px 26px rgba(178, 44, 46, 0.32); }
+  33%      { box-shadow: 0 6px 26px rgba(235, 170, 31, 0.34); }
+  66%      { box-shadow: 0 6px 26px rgba(181, 217, 238, 0.55); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-wrap { animation: none; }
+}
 .cta-button {
   display: inline-flex;
   align-items: center;
@@ -559,10 +582,12 @@ a.row:hover .value { color: var(--vista-red-dark); text-decoration: underline; t
       <a class="qa" href="mailto:jhanna@vistasiteselection.com"><span class="qa-btn"><svg viewBox="0 0 24 24"><path d="M20 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 4-8 5-8-5V6l8 5 8-5z"/></svg></span><span class="qa-label">EMAIL</span></a></nav>
 
     <div class="reveal-fade" style="--d:980ms">
-      <a class="cta-button" href="contact.vcf" download="janie-hanna.vcf">
-        <span class="cta-label">SAVE TO CONTACTS</span>
-        <span class="cta-arrow">→</span>
-      </a>
+      <div class="cta-wrap">
+        <a class="cta-button" href="contact.vcf" download="janie-hanna.vcf">
+          <span class="cta-label">SAVE TO CONTACTS</span>
+          <span class="cta-arrow">→</span>
+        </a>
+      </div>
       <div class="cta-hint">No app required · works on iPhone &amp; Android</div>
     </div>
   </section>
