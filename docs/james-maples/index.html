@@ -159,33 +159,10 @@ main {
 /* ============ HERO / IDENTITY ============ */
 .card-hero { text-align: center; margin-bottom: 34px; }
 
-.hero-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.22em;
-  color: var(--ink-soft);
-  text-transform: uppercase;
-  margin-bottom: 28px;
-  padding: 7px 14px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(6px);
-}
-.eye-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--vista-red);
-  box-shadow: 0 0 10px rgba(178, 44, 46, 0.6);
-  animation: pulse 2s ease-in-out infinite;
-}
-
 .portrait-wrap {
   position: relative;
   display: inline-block;
-  margin-bottom: 24px;
+  margin: 10px 0 24px;
   animation: portraitIn 700ms cubic-bezier(.22,.61,.36,1) both;
 }
 @keyframes portraitIn {
@@ -561,11 +538,6 @@ a.row:hover .value { color: var(--vista-red-dark); text-decoration: underline; t
 
 <main>
   <section class="card-hero">
-    <div class="hero-eyebrow reveal-fade" style="--d:60ms">
-      <span class="eye-dot"></span>
-      <span>VISTA SITE SELECTION · TEAM CARD</span>
-    </div>
-
     <div class="portrait-wrap">
       <div class="portrait"><img src="photo.jpg" alt="James N. Maples"></div>
       <div class="portrait-badge"><img src="../assets/vista-v.png" alt=""></div>

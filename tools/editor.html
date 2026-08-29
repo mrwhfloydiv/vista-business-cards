@@ -179,16 +179,20 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       <h3>QR <em>designer.</em></h3>
       <div class="qrbox" id="qrBox"></div>
       <div class="qgrid">
-        <div class="field"><label>Dot style</label>
+        <div class="field"><label>Pattern (QR body)</label>
           <select id="q_dots"><option value="square">Square</option><option value="dots">Dots</option><option value="rounded">Rounded</option><option value="classy">Classy</option><option value="classy-rounded">Classy rounded</option><option value="extra-rounded">Extra rounded</option></select>
         </div>
-        <div class="field"><label>Corner style</label>
+        <div class="field"><label>Eyes (3 corners)</label>
           <select id="q_corners"><option value="square">Square</option><option value="dot">Dot</option><option value="extra-rounded">Rounded</option></select>
         </div>
-        <div class="field"><label>Dot color</label><input type="color" id="q_dotColor" value="#14191c"></div>
-        <div class="field"><label>Corner color</label><input type="color" id="q_cornerColor" value="#b22c2e"></div>
+        <div class="field"><label>Pattern color</label><input type="color" id="q_dotColor" value="#14191c"></div>
+        <div class="field"><label>Eye color</label><input type="color" id="q_cornerColor" value="#b22c2e"></div>
         <div class="field"><label>Center logo</label>
-          <select id="q_logo"><option value="/assets/vista-v.png">Vista V</option><option value="">None</option></select>
+          <select id="q_logo">
+            <option value="/assets/vista-v-badge.png">Vista V · circle badge</option>
+            <option value="/assets/vista-v.png">Vista V · plain</option>
+            <option value="">None</option>
+          </select>
         </div>
         <div class="field"><label>Logo size</label><input type="range" id="q_logoSize" min="0.2" max="0.45" step="0.05" value="0.35"></div>
       </div>
@@ -356,13 +360,21 @@ $('fileInput').addEventListener('change', () => {
 // ---------- QR designer ----------
 function qrConfig(size, slug) {
   const logo = $('q_logo').value;
+  const isBadge = logo.includes('badge');
   return {
     width: size, height: size, type: 'canvas',
     data: (site.baseUrl || '').replace(/\/$/, '') + '/' + slug + '/',
     margin: Math.round(size * 0.033),
     qrOptions: { errorCorrectionLevel: 'H' },
     image: logo || undefined,
-    imageOptions: { crossOrigin: 'anonymous', margin: Math.round(size * 0.017), imageSize: parseFloat($('q_logoSize').value) },
+    // The circle badge is opaque, so it sits ON TOP of the dots (no punched-out
+    // white square); the plain logo still clears the dots behind it.
+    imageOptions: {
+      crossOrigin: 'anonymous',
+      hideBackgroundDots: !isBadge,
+      margin: isBadge ? 0 : Math.round(size * 0.017),
+      imageSize: parseFloat($('q_logoSize').value)
+    },
     dotsOptions: { type: $('q_dots').value, color: $('q_dotColor').value },
     cornersSquareOptions: { type: $('q_corners').value, color: $('q_cornerColor').value },
     cornersDotOptions: { type: $('q_corners').value === 'square' ? 'square' : 'dot', color: $('q_cornerColor').value },
