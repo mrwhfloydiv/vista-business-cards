@@ -50,7 +50,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .layout{flex:1;display:grid;grid-template-columns:250px minmax(380px,1fr) 400px;gap:0;align-items:start}
 
 /* ---------- roster ---------- */
-.roster{border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:67px;height:calc(100vh - 67px);overflow-y:auto}
+.roster{border-right:1px solid var(--line);padding:18px 14px;position:sticky;top:67px;height:calc(100vh - 67px);overflow-y:auto;
+  background:rgba(250,250,250,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
 .roster h2, .col h2{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.2em;color:var(--ink-soft);
   text-transform:uppercase;margin:4px 8px 12px}
 .person-btn{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 10px;border-radius:10px;
@@ -100,7 +101,8 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .upload-tile .ulabel{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--ink-soft);text-transform:uppercase}
 
 /* ---------- preview + QR ---------- */
-.preview-col{border-left:1px solid var(--line);padding:22px;position:sticky;top:67px;height:calc(100vh - 67px);overflow-y:auto}
+.preview-col{border-left:1px solid var(--line);padding:22px;position:sticky;top:67px;height:calc(100vh - 67px);overflow-y:auto;
+  background:rgba(250,250,250,.62);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
 .phone{position:relative;width:250px;height:520px;border-radius:32px;background:var(--vista-black);padding:9px;
   box-shadow:0 24px 60px rgba(20,25,28,.18);margin:0 auto 8px;overflow:hidden;cursor:pointer;display:block;text-decoration:none;
   transition:transform var(--t)}
