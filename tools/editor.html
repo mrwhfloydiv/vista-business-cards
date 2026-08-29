@@ -42,8 +42,39 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .brand-name em{font-family:'Instrument Serif',serif;font-style:italic;color:var(--vista-red);font-size:1.22em}
 .brand-tag{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--ink-soft);margin-top:3px}
 #status{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--ink-soft);
-  padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:white;max-width:46vw;
+  padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:white;max-width:42vw;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.header-meta{display:flex;align-items:center;gap:14px}
+
+/* WF mark of approval — masked SVG, recolors red + bounces on hover,
+   popup reveals the portrait. The maker's stamp. */
+.wf-stamp-wrap{position:relative;display:inline-flex}
+.wf-stamp{display:inline-flex;align-items:center;justify-content:center;height:22px;padding:2px 4px;
+  cursor:pointer;text-decoration:none;border-radius:6px}
+.wf-stamp:focus-visible{outline:2px solid var(--vista-red);outline-offset:3px}
+.wf-stamp-mark{display:block;height:100%;aspect-ratio:474/193;background-color:var(--ink);
+  -webkit-mask:url(/assets/wf-stamp.svg) center / contain no-repeat;
+          mask:url(/assets/wf-stamp.svg) center / contain no-repeat;
+  transition:background-color 220ms ease}
+.wf-stamp:hover .wf-stamp-mark,.wf-stamp:focus-visible .wf-stamp-mark{
+  background-color:var(--vista-red);animation:wfStampBounce .9s ease-in-out infinite}
+@keyframes wfStampBounce{
+  0%,100%{transform:rotate(0deg) scale(1)}
+  20%{transform:rotate(-5deg) scale(1.08)}
+  60%{transform:rotate(5deg) scale(1.08)}
+  80%{transform:rotate(-2deg) scale(1.04)}}
+.wf-popup{position:absolute;top:calc(100% + 10px);right:0;background:white;border:1px solid var(--line);
+  border-radius:var(--radius);box-shadow:0 24px 60px rgba(20,25,28,.14),0 8px 20px rgba(20,25,28,.08);
+  padding:14px;display:flex;flex-direction:column;align-items:center;gap:12px;width:200px;z-index:100;
+  pointer-events:none;opacity:0;transform:translateY(-6px) scale(.96);
+  transition:opacity 260ms cubic-bezier(.22,.61,.36,1),transform 260ms cubic-bezier(.22,.61,.36,1)}
+.wf-popup.visible{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.wf-popup::before{content:'';position:absolute;top:-7px;right:18px;width:12px;height:12px;background:white;
+  border-top:1px solid var(--line);border-left:1px solid var(--line);transform:rotate(45deg)}
+.wf-popup-img{width:170px;height:170px;object-fit:cover;border-radius:10px;display:block;background:var(--paper)}
+.wf-popup-text{font-size:13px;letter-spacing:.02em;color:var(--ink-soft);text-align:center;font-weight:500}
+.wf-popup-text em{font-family:'Instrument Serif',serif;font-style:italic;font-weight:400;color:var(--vista-red);
+  font-size:1.25em;letter-spacing:-.01em}
 #status.busy{color:var(--vista-red);border-color:var(--vista-red)}
 #status.ok{color:#166534;border-color:#86efac}
 
@@ -172,7 +203,19 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
       <div class="brand-tag">LOCAL ADMIN · SAVES REBUILD THE SITE · PUBLISH VIA GIT PUSH</div>
     </div>
   </div>
-  <div id="status">ready</div>
+  <div class="header-meta">
+    <div id="status">ready</div>
+    <div class="wf-stamp-wrap">
+      <a class="wf-stamp" id="wfStamp" aria-label="WF mark of approval" tabindex="0">
+        <span class="wf-stamp-mark" aria-hidden="true"></span>
+      </a>
+      <div class="wf-popup" id="wfPopup" role="tooltip" aria-hidden="true">
+        <img src="/assets/wf-portrait.gif" alt="William Floyd" class="wf-popup-img" loading="lazy"
+             onerror="this.style.display='none'">
+        <div class="wf-popup-text"><em>WF</em> — Mark of Approval</div>
+      </div>
+    </div>
+  </div>
 </header>
 
 <canvas id="bgGrid" class="bg-grid" aria-hidden="true"></canvas>
@@ -607,6 +650,19 @@ $('qrReset').addEventListener('click', async () => {
   try { status('resetting…', 'busy'); await api('/api/upload', { method: 'POST', body: JSON.stringify({ slug: current.slug, kind: 'qr-clear', dataUrl: '' }) }); status('back to plain QR', 'ok'); await load(current.slug); }
   catch (e) { status('error: ' + e.message, 'busy'); }
 });
+
+// ---------- WF mark of approval ----------
+(function () {
+  const stamp = $('wfStamp'), popup = $('wfPopup');
+  let hoverTimer = null;
+  function show() { popup.classList.add('visible'); popup.setAttribute('aria-hidden', 'false'); }
+  function hide() { popup.classList.remove('visible'); popup.setAttribute('aria-hidden', 'true'); }
+  stamp.addEventListener('mouseenter', () => { hoverTimer = setTimeout(show, 2000); });
+  stamp.addEventListener('mouseleave', () => { clearTimeout(hoverTimer); });
+  stamp.addEventListener('click', (e) => { e.stopPropagation(); popup.classList.contains('visible') ? hide() : show(); });
+  document.addEventListener('click', (e) => { if (!popup.contains(e.target)) hide(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hide(); });
+})();
 
 // ---------- tracking settings ----------
 function loadSettings() {
