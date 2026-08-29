@@ -12,11 +12,12 @@
   "analyticsEndpoint": "",
   "goatcounter": "",
   "qrStyle": {
-    "dots": "square",
-    "corners": "extra-rounded",
+    "dots": "extra-rounded",
+    "corners": "square",
+    "eyeDot": "auto",
     "dotColor": "#14191c",
     "cornerColor": "#b22c2e",
     "logo": "/assets/vista-v-badge.png",
-    "logoSize": "0.35"
+    "logoSize": "0.45"
   }
 }

@@ -134,6 +134,7 @@ const server = http.createServer(async (req, res) => {
       else if (kind === 'cardart-front') saveImage(path.join(ROOT, 'assets', 'cardart'), `${slug}-front`, dataUrl);
       else if (kind === 'cardart-back') saveImage(path.join(ROOT, 'assets', 'cardart'), `${slug}-back`, dataUrl);
       else if (kind === 'qr-override') saveImage(path.join(ROOT, 'assets', 'qr-overrides'), slug, dataUrl);
+      else if (kind === 'qr-logo') saveImage(path.join(ROOT, 'assets'), 'qr-logo-custom', dataUrl);
       else if (kind === 'qr-clear') {
         const f = path.join(ROOT, 'assets', 'qr-overrides', `${slug}.png`);
         if (fs.existsSync(f)) fs.unlinkSync(f);
